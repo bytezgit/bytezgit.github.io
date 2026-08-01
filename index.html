@@ -444,11 +444,13 @@ function proximityCheck(){
     const d=Math.sqrt((mx-cx)**2+(my-cy)**2);
     pfp.classList.toggle('alive',d<140);
   }
+
   document.querySelectorAll('.linkbtn,.priv-row').forEach(el=>{
     const r=el.getBoundingClientRect();
-    const cx=r.left+r.width/2,cy=r.top+r.height/2;
-    const d=Math.sqrt((mx-cx)**2+(my-cy)**2);
-    el.classList.toggle('waking',d>50&&d<180);
+    const nearX=Math.max(r.left,Math.min(mx,r.right));
+    const nearY=Math.max(r.top, Math.min(my,r.bottom));
+    const d=Math.sqrt((mx-nearX)**2+(my-nearY)**2);
+    el.classList.toggle('waking',d>0&&d<60);
   });
 }
 
