@@ -586,40 +586,40 @@
           barEls[i].style.height = h + 'px';
         }
       }
-      const lines = ["i code random shit.", "i play random shit.", "if i got an idea, i make it.", "idc how."];
-      const typeEl = document.getElementById('typeline');
-
-      function startTyping() {
-        let li = 0,
-          ci = 0;
-        const cursor = ' < span class = "cursor" > < /span>';
-
-        function typeChar() {
-          if (li >= lines.length) li = 0;
-          const line = lines[li];
-          if (ci <= line.length) {
-            typeEl.innerHTML = line.slice(0, ci) + cursor;
-            ci++;
-            setTimeout(typeChar, 38);
-          } else {
-            setTimeout(eraseChar, 1300);
-          }
+    const lines = ["i code random shit.", "i play random shit.", "if i got an idea, i make it.", "idc how."];
+    const typeEl = document.getElementById('typeline');
+    const cursor = '<span class="cursor"></span>';
+    
+    function startTyping() {
+      let li = 0, ci = 0;
+    
+      function typeChar() {
+        if (li >= lines.length) li = 0;
+        const line = lines[li];
+        if (ci <= line.length) {
+          typeEl.innerHTML = line.slice(0, ci) + cursor;
+          ci++;
+          setTimeout(typeChar, 38);
+        } else {
+          setTimeout(eraseChar, 1300);
         }
-
-        function eraseChar() {
-          const line = lines[li];
-          if (ci >= 0) {
-            typeEl.innerHTML = line.slice(0, ci) + cursor;
-            ci--;
-            setTimeout(eraseChar, 22);
-          } else {
-            li++;
-            ci = 0;
-            setTimeout(typeChar, 250);
-          }
-        }
-        typeChar();
       }
+    
+      function eraseChar() {
+        const line = lines[li];
+        if (ci > 0) {
+          ci--;
+          typeEl.innerHTML = line.slice(0, ci) + cursor;
+          setTimeout(eraseChar, 22);
+        } else {
+          typeEl.innerHTML = cursor;
+          li++;
+          ci = 0;
+          setTimeout(typeChar, 250);
+        }
+      }
+      typeChar();
+    }
     </script>
   </body>
 </html>
