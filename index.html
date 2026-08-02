@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>bytez</title>
 <meta property="og:title" content="Bytez's Site">
 <meta property="og:description" content="i code random shit.">
@@ -12,7 +12,6 @@
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta name="theme-color" content="#ffe000">
-
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bytez's Site">
@@ -33,7 +32,21 @@ html, body {
   background: #000;
   font-family: 'JetBrains Mono', monospace;
   color: #fff;
-  cursor: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  html, body {
+    cursor: auto;
+  }
+  #cursor {
+    display: none !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html, body {
+    cursor: none;
+  }
 }
 
 #bgcanvas {
@@ -92,7 +105,6 @@ body::after {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  cursor: none;
   transition: opacity 0.8s ease, filter 0.8s ease;
 }
 
@@ -111,12 +123,14 @@ body::after {
   letter-spacing: 0.2em;
   text-transform: lowercase;
   color: #ffe000;
-  cursor: none;
   text-shadow: 0 0 4px #ffe000, 0 0 16px rgba(255, 224, 0, 0.5), 0 0 32px rgba(255, 224, 0, 0.2);
   animation: neonFlicker 4s infinite;
+  padding: 16px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-#enterBtn:hover {
+#enterBtn:active {
   text-shadow: 0 0 6px #fff, 0 0 24px #ffe000, 0 0 60px rgba(255, 224, 0, 0.8);
 }
 
@@ -131,14 +145,17 @@ main {
   position: relative;
   z-index: 10;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 1s ease 0.2s;
-  padding: 24px 24px 80px;
+  padding: 16px 16px 80px;
   pointer-events: none;
   perspective: 1200px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 main.show {
@@ -154,6 +171,9 @@ main.show {
   transform-style: preserve-3d;
   transition: transform 0.15s ease-out;
   will-change: transform;
+  max-height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .content {
@@ -161,7 +181,7 @@ main.show {
   max-width: 420px;
   text-align: left;
   position: relative;
-  padding: 32px;
+  padding: 24px;
   border-radius: 14px;
   border: none;
 }
@@ -197,7 +217,7 @@ main.show {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 8px;
 }
 
@@ -224,7 +244,7 @@ main.show {
 }
 
 .uname {
-  font-size: clamp(46px, 11vw, 64px);
+  font-size: clamp(36px, 10vw, 64px);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 0.95;
@@ -237,7 +257,7 @@ main.show {
 }
 
 .utag {
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: #6b6220;
@@ -250,10 +270,10 @@ main.show {
 }
 
 .typeline {
-  font-size: 14px;
+  font-size: 13px;
   color: #b8b8b8;
   line-height: 1.5;
-  height: 21px;
+  min-height: 21px;
   margin-bottom: 28px;
   border-left: 2px solid #2a2500;
   padding-left: 14px;
@@ -277,7 +297,7 @@ main.show {
 }
 
 .section-tag {
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: #524a17;
@@ -296,24 +316,48 @@ main.show {
   gap: 10px;
   text-decoration: none;
   color: #e8e8e8;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
-  padding: 9px 0;
+  padding: 11px 0;
   border-bottom: 1px solid #161611;
   position: relative;
   transition: color 0.15s ease, padding-left 0.2s ease, border-color 0.2s ease, text-shadow 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.linkbtn:hover {
+.linkbtn:active {
   color: #ffe000;
   padding-left: 8px;
   border-color: #2a2500;
   text-shadow: 0 0 12px rgba(255, 224, 0, 0.4);
 }
 
-.linkbtn:hover .link-arrow {
+.linkbtn:active .link-arrow {
   opacity: 1;
   transform: translateX(0);
+}
+
+.linkbtn:active .link-dot {
+  box-shadow: 0 0 12px #ffe000;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .linkbtn:hover {
+    color: #ffe000;
+    padding-left: 8px;
+    border-color: #2a2500;
+    text-shadow: 0 0 12px rgba(255, 224, 0, 0.4);
+  }
+
+  .linkbtn:hover .link-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .linkbtn:hover .link-dot {
+    box-shadow: 0 0 12px #ffe000;
+  }
 }
 
 .linkbtn.waking {
@@ -335,7 +379,7 @@ main.show {
 }
 
 .link-url {
-  font-size: 11px;
+  font-size: 10px;
   color: #555;
   font-weight: 400;
   margin-left: auto;
@@ -356,7 +400,7 @@ main.show {
   font-size: 14px;
   font-weight: 700;
   color: #666;
-  padding: 9px 0;
+  padding: 11px 0;
   border-bottom: 1px solid #161611;
   transition: color 0.3s ease;
 }
@@ -371,7 +415,7 @@ main.show {
 }
 
 .priv-desc {
-  font-size: 11px;
+  font-size: 10px;
   color: #4a4a4a;
   font-weight: 400;
   margin-left: auto;
@@ -379,7 +423,7 @@ main.show {
 
 #views {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: #4a4318;
@@ -391,16 +435,24 @@ main.show {
   border: none;
   color: #4a4318;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  cursor: none;
   transition: color 0.2s ease;
   white-space: nowrap;
+  padding: 8px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-#muteBtn:hover {
+#muteBtn:active {
   color: #ffe000;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #muteBtn:hover {
+    color: #ffe000;
+  }
 }
 
 #visualizer {
@@ -429,9 +481,78 @@ main.show {
   margin: 0 0.5px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  main {
+    padding: 12px 12px 80px;
+    align-items: flex-start;
+  }
+  
+  .layout {
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .content {
+    padding: 20px 16px;
+  }
+  
+  .pfp-container {
+    gap: 12px;
+  }
+  
+  .pfp {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .uname {
+    font-size: 36px;
+  }
+  
+  .typeline {
+    font-size: 12px;
+    margin-bottom: 22px;
+  }
+  
+  .section-tag {
+    margin-top: 16px;
+  }
+  
+  .linkbtn, .priv-row {
+    font-size: 13px;
+    padding: 13px 0;
+  }
+  
+  .side-panel {
+    height: 44px;
+    padding: 0 12px;
+  }
+  
+  #visualizer {
+    height: 48px;
+  }
+}
+
+@media (max-width: 380px) {
+  .content {
+    padding: 16px 12px;
+  }
+  
+  .pfp {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .uname {
+    font-size: 30px;
+  }
+  
+  .utag {
+    font-size: 8px;
+  }
+  
   .link-url, .priv-desc {
-    display: none;
+    font-size: 9px;
   }
 }
 
@@ -500,20 +621,69 @@ main.show {
 </main>
 
 <script>
+const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) || 
+                 ('ontouchstart' in window && window.innerWidth < 768);
+
 const cursorEl = document.getElementById('cursor');
 let mx = -999, my = -999;
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX;
-  my = e.clientY;
-  cursorEl.style.left = mx + 'px';
-  cursorEl.style.top = my + 'px';
-});
+if (!isMobile) {
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    cursorEl.style.left = mx + 'px';
+    cursorEl.style.top = my + 'px';
+  });
 
-document.querySelectorAll('a,button').forEach(el => {
-  el.addEventListener('mouseenter', () => cursorEl.classList.add('big'));
-  el.addEventListener('mouseleave', () => cursorEl.classList.remove('big'));
-});
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursorEl.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursorEl.classList.remove('big'));
+  });
+} else {
+  cursorEl.style.display = 'none';
+}
+
+document.addEventListener('touchmove', e => {
+  if (e.touches.length > 0) {
+    mx = e.touches[0].clientX;
+    my = e.touches[0].clientY;
+    
+    if (Math.random() < 0.08) spawnRipple(mx, my);
+    
+    if (Math.random() < 0.3) {
+      inkTrail.push({
+        x: mx + (Math.random() - 0.5) * 4,
+        y: my + (Math.random() - 0.5) * 4,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8 - 0.2,
+        a: Math.min(0.7, 0.5),
+        r: Math.random() * 2.5 + 0.5,
+        life: 1
+      });
+    }
+  }
+}, { passive: true });
+
+document.addEventListener('touchstart', e => {
+  if (e.touches.length > 0) {
+    mx = e.touches[0].clientX;
+    my = e.touches[0].clientY;
+    
+    spawnRipple(mx, my);
+    
+    for (let i = 0; i < 8; i++) {
+      inkTrail.push({
+        x: mx,
+        y: my,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3 - 0.5,
+        a: 0.6,
+        r: Math.random() * 3 + 1,
+        life: 1
+      });
+    }
+  }
+}, { passive: true });
 
 const bgC = document.getElementById('bgcanvas');
 const bgX = bgC.getContext('2d');
@@ -526,6 +696,9 @@ function resize() {
 
 resize();
 window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => {
+  setTimeout(resize, 100);
+});
 
 function noise2(x, y, t) {
   return (
@@ -535,7 +708,7 @@ function noise2(x, y, t) {
   ) * 0.5;
 }
 
-const PARTICLE_COUNT = 90;
+const PARTICLE_COUNT = isMobile ? 50 : 90;
 let bgParticles = [];
 
 function makeParticle() {
@@ -556,33 +729,11 @@ for (let i = 0; i < PARTICLE_COUNT; i++) bgParticles.push(makeParticle());
 let ripples = [];
 
 function spawnRipple(x, y) {
-  ripples.push({ x, y, r: 0, maxR: 80 + Math.random() * 60, a: 0.5, speed: 1.5 + Math.random() });
+  ripples.push({ x, y, r: 0, maxR: 60 + Math.random() * 50, a: 0.4, speed: 1.5 + Math.random() });
 }
 
 let lastMx = 0, lastMy = 0;
 let inkTrail = [];
-
-document.addEventListener('mousemove', e => {
-  const velX = e.clientX - lastMx;
-  const velY = e.clientY - lastMy;
-  lastMx = e.clientX;
-  lastMy = e.clientY;
-
-  if (Math.random() < 0.08) spawnRipple(e.clientX, e.clientY);
-
-  const speed = Math.sqrt(velX * velX + velY * velY);
-  if (speed > 1) {
-    inkTrail.push({
-      x: e.clientX + (Math.random() - 0.5) * 4,
-      y: e.clientY + (Math.random() - 0.5) * 4,
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: (Math.random() - 0.5) * 0.8 - 0.2,
-      a: Math.min(0.7, speed * 0.03),
-      r: Math.random() * 2.5 + 0.5,
-      life: 1
-    });
-  }
-});
 
 const ripC = document.getElementById('rippleCanvas');
 const ripX = ripC.getContext('2d');
@@ -611,7 +762,7 @@ function mainLoop(ts) {
   bgX.fillStyle = 'rgba(0,0,0,0.18)';
   bgX.fillRect(0, 0, W, H);
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < (isMobile ? 3 : 5); i++) {
     const sx = Math.random() * W;
     const sy = Math.random() * H;
     const angle = noise2(sx, sy, bgT) * Math.PI * 2;
@@ -739,9 +890,19 @@ const muteBtn = document.getElementById('muteBtn');
 const sidePanel = document.getElementById('sidePanel');
 let muted = false;
 
-gate.addEventListener('click', () => {
+function enterSite() {
   bgm.volume = 0.4;
-  bgm.play().catch(() => {});
+  
+  const playPromise = bgm.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      document.addEventListener('touchstart', function playOnTouch() {
+        bgm.play().catch(() => {});
+        document.removeEventListener('touchstart', playOnTouch);
+      }, { once: true });
+    });
+  }
+  
   gate.classList.add('hidden');
   mainEl.classList.add('show');
   sidePanel.classList.add('show');
@@ -752,17 +913,28 @@ gate.addEventListener('click', () => {
   }, 600);
   initVisualizer();
   spawnRipple(mx, my);
+}
+
+gate.addEventListener('click', enterSite);
+gate.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  enterSite();
 });
 
-muteBtn.addEventListener('click', e => {
-  e.stopPropagation();
+muteBtn.addEventListener('click', toggleMute);
+muteBtn.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  toggleMute();
+});
+
+function toggleMute() {
   muted = !muted;
   bgm.muted = muted;
   muteBtn.textContent = muted ? 'unmute' : 'mute';
-});
+}
 
 let audioCtx, analyser, freqData, barEls;
-const BAR_COUNT = 120;
+const BAR_COUNT = isMobile ? 64 : 120;
 
 function initVisualizer() {
   if (audioCtx) return;
@@ -880,26 +1052,35 @@ function updateViewCounter() {
 
 updateViewCounter();
 
-document.addEventListener('click', e => {
-  spawnRipple(e.clientX, e.clientY);
-  for (let i = 0; i < 12; i++) {
-    inkTrail.push({
-      x: e.clientX,
-      y: e.clientY,
-      vx: (Math.random() - 0.5) * 3,
-      vy: (Math.random() - 0.5) * 3 - 0.5,
-      a: 0.6,
-      r: Math.random() * 3 + 1,
-      life: 1
-    });
-  }
-});
+if (!isMobile) {
+  document.addEventListener('click', e => {
+    spawnRipple(e.clientX, e.clientY);
+    for (let i = 0; i < 12; i++) {
+      inkTrail.push({
+        x: e.clientX,
+        y: e.clientY,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3 - 0.5,
+        a: 0.6,
+        r: Math.random() * 3 + 1,
+        life: 1
+      });
+    }
+  });
+}
 
 const tiltCard = document.getElementById('tiltCard');
 const layoutEl = document.querySelector('.layout');
-const TILT_MAX = 6;
+const TILT_MAX = isMobile ? 3 : 6;
 
-tiltCard.addEventListener('mousemove', e => {
+tiltCard.addEventListener('mousemove', handleTilt);
+tiltCard.addEventListener('touchmove', (e) => {
+  if (e.touches.length > 0) {
+    handleTilt({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
+  }
+}, { passive: true });
+
+function handleTilt(e) {
   const r = layoutEl.getBoundingClientRect();
   const px = (e.clientX - r.left) / r.width;
   const py = (e.clientY - r.top) / r.height;
@@ -907,10 +1088,19 @@ tiltCard.addEventListener('mousemove', e => {
   const ry = (px - 0.5) * TILT_MAX * 2;
   const t = `rotateX(${rx}deg) rotateY(${ry}deg)`;
   layoutEl.style.transform = t;
-});
+}
 
-tiltCard.addEventListener('mouseleave', () => {
+tiltCard.addEventListener('mouseleave', resetTilt);
+tiltCard.addEventListener('touchend', resetTilt);
+
+function resetTilt() {
   layoutEl.style.transform = 'rotateX(0deg) rotateY(0deg)';
+}
+
+document.querySelectorAll('button, a').forEach(el => {
+  el.addEventListener('touchend', (e) => {
+    e.preventDefault();
+  });
 });
 </script>
 </body>
