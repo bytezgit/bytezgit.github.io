@@ -12,7 +12,6 @@
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta name="theme-color" content="#ffe000">
-
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bytez's Site">
 <meta name="twitter:description" content="i code random shit.">
@@ -324,6 +323,8 @@ main.show {
   transition: color 0.15s ease, padding-left 0.2s ease, border-color 0.2s ease, text-shadow 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .linkbtn:active {
@@ -383,6 +384,7 @@ main.show {
   color: #555;
   font-weight: 400;
   margin-left: auto;
+  pointer-events: none;
 }
 
 .link-arrow {
@@ -391,6 +393,7 @@ main.show {
   opacity: 0;
   transform: translateX(-4px);
   transition: all 0.15s ease;
+  pointer-events: none;
 }
 
 .priv-row {
@@ -486,48 +489,48 @@ main.show {
     padding: 12px 12px 80px;
     align-items: flex-start;
   }
-  
+
   .layout {
     gap: 10px;
     width: 100%;
   }
-  
+
   .content {
     padding: 20px 16px;
   }
-  
+
   .pfp-container {
     gap: 12px;
   }
-  
+
   .pfp {
     width: 56px;
     height: 56px;
   }
-  
+
   .uname {
     font-size: 36px;
   }
-  
+
   .typeline {
     font-size: 12px;
     margin-bottom: 22px;
   }
-  
+
   .section-tag {
     margin-top: 16px;
   }
-  
+
   .linkbtn, .priv-row {
     font-size: 13px;
     padding: 13px 0;
   }
-  
+
   .side-panel {
     height: 44px;
     padding: 0 12px;
   }
-  
+
   #visualizer {
     height: 48px;
   }
@@ -537,20 +540,20 @@ main.show {
   .content {
     padding: 16px 12px;
   }
-  
+
   .pfp {
     width: 48px;
     height: 48px;
   }
-  
+
   .uname {
     font-size: 30px;
   }
-  
+
   .utag {
     font-size: 8px;
   }
-  
+
   .link-url, .priv-desc {
     font-size: 9px;
   }
@@ -621,7 +624,7 @@ main.show {
 </main>
 
 <script>
-const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) || 
+const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) ||
                  ('ontouchstart' in window && window.innerWidth < 768);
 
 const cursorEl = document.getElementById('cursor');
@@ -647,9 +650,9 @@ document.addEventListener('touchmove', e => {
   if (e.touches.length > 0) {
     mx = e.touches[0].clientX;
     my = e.touches[0].clientY;
-    
+
     if (Math.random() < 0.08) spawnRipple(mx, my);
-    
+
     if (Math.random() < 0.3) {
       inkTrail.push({
         x: mx + (Math.random() - 0.5) * 4,
@@ -668,9 +671,12 @@ document.addEventListener('touchstart', e => {
   if (e.touches.length > 0) {
     mx = e.touches[0].clientX;
     my = e.touches[0].clientY;
-    
+
+    const target = e.target;
+    if (target.closest('a.linkbtn')) return;
+
     spawnRipple(mx, my);
-    
+
     for (let i = 0; i < 8; i++) {
       inkTrail.push({
         x: mx,
@@ -883,7 +889,7 @@ let muted = false;
 
 function enterSite() {
   bgm.volume = 0.4;
-  
+
   const playPromise = bgm.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {
@@ -893,7 +899,7 @@ function enterSite() {
       }, { once: true });
     });
   }
-  
+
   gate.classList.add('hidden');
   mainEl.classList.add('show');
   sidePanel.classList.add('show');
@@ -903,17 +909,17 @@ function enterSite() {
     startTyping();
   }, 600);
   initVisualizer();
-  spawnRipple(mx, my);
+  spawnRipple(mx === -999 ? window.innerWidth / 2 : mx, my === -999 ? window.innerHeight / 2 : my);
 }
 
-gate.addEventListener('click', enterSite);
-gate.addEventListener('touchend', (e) => {
+document.getElementById('enterBtn').addEventListener('click', enterSite);
+document.getElementById('enterBtn').addEventListener('touchend', e => {
   e.preventDefault();
   enterSite();
 });
 
 muteBtn.addEventListener('click', toggleMute);
-muteBtn.addEventListener('touchend', (e) => {
+muteBtn.addEventListener('touchend', e => {
   e.preventDefault();
   toggleMute();
 });
@@ -1064,12 +1070,10 @@ const tiltCard = document.getElementById('tiltCard');
 const layoutEl = document.querySelector('.layout');
 const TILT_MAX = isMobile ? 3 : 6;
 
-tiltCard.addEventListener('mousemove', handleTilt);
-tiltCard.addEventListener('touchmove', (e) => {
-  if (e.touches.length > 0) {
-    handleTilt({ clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
-  }
-}, { passive: true });
+if (!isMobile) {
+  tiltCard.addEventListener('mousemove', handleTilt);
+  tiltCard.addEventListener('mouseleave', resetTilt);
+}
 
 function handleTilt(e) {
   const r = layoutEl.getBoundingClientRect();
@@ -1077,12 +1081,8 @@ function handleTilt(e) {
   const py = (e.clientY - r.top) / r.height;
   const rx = (0.5 - py) * TILT_MAX * 2;
   const ry = (px - 0.5) * TILT_MAX * 2;
-  const t = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-  layoutEl.style.transform = t;
+  layoutEl.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
 }
-
-tiltCard.addEventListener('mouseleave', resetTilt);
-tiltCard.addEventListener('touchend', resetTilt);
 
 function resetTilt() {
   layoutEl.style.transform = 'rotateX(0deg) rotateY(0deg)';
