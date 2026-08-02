@@ -872,38 +872,6 @@ function proximityCheck() {
     const d = Math.sqrt((mx - cx) ** 2 + (my - cy) ** 2);
     pfp.classList.toggle('alive', d < 140);
   }
-
-  document.querySelectorAll('.linkbtn').forEach(el => {
-    const r = el.getBoundingClientRect();
-    const isInside = mx >= r.left && mx <= r.right && my >= r.top && my <= r.bottom;
-    const nearX = Math.max(r.left, Math.min(mx, r.right));
-    const nearY = Math.max(r.top, Math.min(my, r.bottom));
-    const d = Math.sqrt((mx - nearX) ** 2 + (my - nearY) ** 2);
-    
-    if (isInside) {
-      el.classList.add('waking');
-    } else if (d < 60) {
-      el.classList.add('waking');
-    } else {
-      el.classList.remove('waking');
-    }
-  });
-
-  document.querySelectorAll('.priv-row').forEach(el => {
-    const r = el.getBoundingClientRect();
-    const isInside = mx >= r.left && mx <= r.right && my >= r.top && my <= r.bottom;
-    const nearX = Math.max(r.left, Math.min(mx, r.right));
-    const nearY = Math.max(r.top, Math.min(my, r.bottom));
-    const d = Math.sqrt((mx - nearX) ** 2 + (my - nearY) ** 2);
-    
-    if (isInside) {
-      el.classList.add('waking');
-    } else if (d < 60) {
-      el.classList.add('waking');
-    } else {
-      el.classList.remove('waking');
-    }
-  });
 }
 
 const gate = document.getElementById('gate');
@@ -1119,24 +1087,6 @@ tiltCard.addEventListener('touchend', resetTilt);
 function resetTilt() {
   layoutEl.style.transform = 'rotateX(0deg) rotateY(0deg)';
 }
-
-document.querySelectorAll('.linkbtn').forEach(el => {
-  el.addEventListener('click', function(e) {
-    const href = this.getAttribute('href');
-    if (href) {
-      window.open(href, '_blank', 'noopener,noreferrer');
-    }
-  });
-  
-  el.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const href = this.getAttribute('href');
-    if (href) {
-      window.open(href, '_blank', 'noopener,noreferrer');
-    }
-  });
-});
 </script>
 </body>
 </html>
