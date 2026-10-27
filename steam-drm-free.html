@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Steam DRM-Free .so files — Bytez</title>
+<meta name="theme-color" content="#ffe000">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  background: #000;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.10) 0px,
+      rgba(0, 0, 0, 0.10) 1px,
+      transparent 1px,
+      transparent 3px);
+  opacity: 0.3;
+}
+
+#bgcanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wrap {
+  position: relative;
+  z-index: 10;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 20px 96px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #6b6220;
+  text-decoration: none;
+  margin-bottom: 42px;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.back:hover {
+  color: #ffe000;
+  text-shadow: 0 0 12px rgba(255,224,0,0.4);
+}
+
+.title {
+  font-size: clamp(30px, 7vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.title .y {
+  color: #ffe000;
+  text-shadow: 0 0 20px rgba(255,224,0,0.55);
+}
+
+.subtitle {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #6b6220;
+  margin-bottom: 40px;
+}
+.subtitle::before { content: "— "; }
+
+.section-tag {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #524a17;
+  margin-bottom: 14px;
+  margin-top: 8px;
+}
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #161611;
+}
+
+.game-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid #161611;
+  transition: border-color 0.2s ease;
+  flex-wrap: wrap;
+}
+.game-row:hover { border-color: #2a2500; }
+
+.game-dot {
+  width: 5px;
+  height: 5px;
+  background: #ffe000;
+  box-shadow: 0 0 6px #ffe000;
+  flex-shrink: 0;
+}
+
+.game-info {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.game-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #e8e8e8;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+.game-row:hover .game-name { color: #ffe000; }
+
+.game-meta {
+  font-size: 10px;
+  color: #555;
+  font-weight: 400;
+  margin-top: 3px;
+  letter-spacing: 0.05em;
+}
+
+.dl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #ffe000;
+  background: rgba(255,224,0,0.05);
+  border: 1px solid rgba(255,224,0,0.3);
+  border-radius: 7px;
+  padding: 9px 14px;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.dl-btn:hover,
+.dl-btn:active {
+  background: rgba(255,224,0,0.12);
+  border-color: #ffe000;
+  box-shadow: 0 0 20px rgba(255,224,0,0.2);
+  transform: translateY(-1px);
+  color: #ffe000;
+}
+.dl-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.footer-note {
+  margin-top: 56px;
+  font-size: 10px;
+  color: #3a3a3a;
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+  border-left: 2px solid #161611;
+  padding-left: 14px;
+}
+
+@media (max-width: 480px) {
+  .wrap { padding: 32px 14px 72px; }
+  .game-row { gap: 10px; padding: 16px 0; }
+  .game-name { font-size: 14px; }
+  .dl-btn { font-size: 9px; padding: 8px 11px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgcanvas"></canvas>
+
+<div class="wrap">
+  <a class="back" href="index.html">← back</a>
+
+  <div class="title">Steam DRM-Free <span class="y">.so</span> files</div>
+  <div class="subtitle">cracked by bytez</div>
+
+  <div class="section-tag">available cracks</div>
+
+  <div class="game-list">
+
+    <div class="game-row">
+      <span class="game-dot"></span>
+      <div class="game-info">
+        <div class="game-name">Hamster Hunter</div>
+        <div class="game-meta">Steam · DRM-free · .so</div>
+      </div>
+      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/hh/libsteam_api.so" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download .so
+      </a>
+    </div>
+
+    <div class="game-row">
+      <span class="game-dot"></span>
+      <div class="game-info">
+        <div class="game-name">Graveyard Keeper</div>
+        <div class="game-meta">Steam · DRM-free · .so</div>
+      </div>
+      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/gk/libsteam_api.so" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download .so
+      </a>
+    </div>
+
+    <div class="game-row">
+      <span class="game-dot"></span>
+      <div class="game-info">
+        <div class="game-name">Stardew Valley</div>
+        <div class="game-meta">Steam · DRM-free · .so</div>
+      </div>
+      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/sv/libsteam_api.so" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download .so
+      </a>
+    </div>
+
+    <div class="game-row">
+      <span class="game-dot"></span>
+      <div class="game-info">
+        <div class="game-name">Project Zomboid</div>
+        <div class="game-meta">Steam · DRM-free · .so</div>
+      </div>
+      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/pz/libsteam_api.so" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download .so
+      </a>
+    </div>
+
+    <div class="game-row">
+      <span class="game-dot"></span>
+      <div class="game-info">
+        <div class="game-name">Postal 2</div>
+        <div class="game-meta">Steam · DRM-free · .so</div>
+      </div>
+      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/p2/libsteam_api.so" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download .so
+      </a>
+    </div>
+
+  </div>
+
+  <div class="footer-note">
+    These .so files are cracked for DRM-free use. Only download if you own the game. No support provided.
+  </div>
+</div>
+
+<script>
+const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) ||
+                 ('ontouchstart' in window && window.innerWidth < 768);
+
+const bgC = document.getElementById('bgcanvas');
+const bgX = bgC.getContext('2d');
+let W, H;
+
+function resize() {
+  W = bgC.width = window.innerWidth;
+  H = bgC.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function noise2(x, y, t) {
+  return (
+    Math.sin(x * 0.008 + t * 0.3) *
+    Math.cos(y * 0.011 + t * 0.2) +
+    Math.sin(x * 0.015 - y * 0.009 + t * 0.15)
+  ) * 0.5;
+}
+
+const PARTICLE_COUNT = isMobile ? 40 : 70;
+let particles = [];
+
+function makeParticle() {
+  return {
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: 0,
+    vy: 0,
+    maxLife: 200 + Math.random() * 400,
+    age: 0,
+    size: Math.random() * 1.4 + 0.3,
+    hue: 42 + (Math.random() - 0.5) * 18
+  };
+}
+for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(makeParticle());
+
+let t = 0;
+let mx = -999, my = -999;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+document.addEventListener('touchmove', e => {
+  if (e.touches.length > 0) { mx = e.touches[0].clientX; my = e.touches[0].clientY; }
+}, { passive: true });
+
+function loop() {
+  requestAnimationFrame(loop);
+  t += 0.016;
+
+  bgX.fillStyle = 'rgba(0,0,0,0.18)';
+  bgX.fillRect(0, 0, W, H);
+
+  for (let i = 0; i < (isMobile ? 2 : 4); i++) {
+    const sx = Math.random() * W, sy = Math.random() * H;
+    const angle = noise2(sx, sy, t) * Math.PI * 2;
+    bgX.beginPath();
+    bgX.moveTo(sx, sy);
+    bgX.lineTo(sx + Math.cos(angle) * 12, sy + Math.sin(angle) * 12);
+    bgX.strokeStyle = 'rgba(255,224,0,0.015)';
+    bgX.lineWidth = 1;
+    bgX.stroke();
+  }
+
+  for (let p of particles) {
+    const angle = noise2(p.x, p.y, t) * Math.PI * 2;
+    const speed = 0.5;
+    const cdx = p.x - mx, cdy = p.y - my;
+    const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
+    let cx = 0, cy = 0;
+    if (cdist < 150 && cdist > 1) {
+      cx = (cdx / cdist) * (150 - cdist) * 0.006;
+      cy = (cdy / cdist) * (150 - cdist) * 0.006;
+    }
+    p.vx = p.vx * 0.85 + (Math.cos(angle) * speed * 0.15 + cx);
+    p.vy = p.vy * 0.85 + (Math.sin(angle) * speed * 0.15 + cy);
+    p.x += p.vx;
+    p.y += p.vy;
+    p.age++;
+
+    if (p.x < -5) p.x = W + 5;
+    if (p.x > W + 5) p.x = -5;
+    if (p.y < -5) p.y = H + 5;
+    if (p.y > H + 5) p.y = -5;
+
+    const life = 1 - (p.age / p.maxLife);
+    if (life < 0) { Object.assign(p, makeParticle()); continue; }
+
+    bgX.beginPath();
+    bgX.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    bgX.fillStyle = `hsla(${p.hue},100%,60%,${0.35 * life})`;
+    bgX.fill();
+  }
+
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 110) {
+        bgX.beginPath();
+        bgX.moveTo(particles[i].x, particles[i].y);
+        bgX.lineTo(particles[j].x, particles[j].y);
+        bgX.strokeStyle = `rgba(255,224,0,${0.07 * (1 - d / 110)})`;
+        bgX.lineWidth = 0.8;
+        bgX.stroke();
+      }
+    }
+  }
+}
+loop();
+</script>
+</body>
+</html>
