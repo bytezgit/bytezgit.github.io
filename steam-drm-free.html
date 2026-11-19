@@ -2,425 +2,290 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Steam DRM-Free .so files — Bytez</title>
-<meta name="theme-color" content="#4E4E4E">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap');
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html, body {
-  min-height: 100%;
-  background: #000000;
-  font-family: 'JetBrains Mono', monospace;
-  color: #d0d0d0;
-  overflow-x: hidden;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg,
-      rgba(0, 0, 0, 0.10) 0px,
-      rgba(0, 0, 0, 0.10) 1px,
-      transparent 1px,
-      transparent 3px);
-  opacity: 0.3;
-}
-
-#bgcanvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.wrap {
-  position: relative;
-  z-index: 10;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 48px 20px 96px;
-  background: transparent;
-}
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: #7a7a7a;
-  text-decoration: none;
-  margin-bottom: 42px;
-  transition: color 0.2s ease, text-shadow 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.back:hover {
-  color: #dcdcdc;
-  text-shadow: 0 0 12px #8a8a8a;
-}
-
-.title {
-  font-size: clamp(30px, 7vw, 52px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-  color: #f0f0f0;
-  text-shadow: 0 0 20px rgba(0,0,0,0.6);
-  margin-bottom: 10px;
-}
-.title .y {
-  color: #b0b0b0;
-  text-shadow: 0 0 20px #4C4C4C;
-}
-
-.subtitle {
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #8a8a8a;
-  margin-bottom: 40px;
-}
-.subtitle::before { content: "— "; }
-
-.section-tag {
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #7a7a7a;
-  margin-bottom: 14px;
-  margin-top: 8px;
-}
-
-.game-list {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid #242424;
-}
-
-.game-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 18px 0;
-  border-bottom: 1px solid #242424;
-  transition: border-color 0.2s ease;
-  flex-wrap: wrap;
-}
-.game-row:hover { border-color: #4C4C4C; }
-
-.game-dot {
-  width: 5px;
-  height: 5px;
-  background: #b8b8b8;
-  box-shadow: 0 0 6px #4C4C4C;
-  flex-shrink: 0;
-}
-
-.game-info {
-  flex: 1 1 180px;
-  min-width: 0;
-}
-.game-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: #dcdcdc;
-  letter-spacing: -0.01em;
-  transition: color 0.15s ease;
-}
-.game-row:hover .game-name { color: #ffffff; }
-
-.game-meta {
-  font-size: 10px;
-  color: #7a7a7a;
-  font-weight: 400;
-  margin-top: 3px;
-  letter-spacing: 0.05em;
-}
-
-.dl-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: #b8b8b8;
-  background: rgba(44, 44, 44, 0.5);
-  border: 1px solid #4C4C4C;
-  border-radius: 7px;
-  padding: 9px 14px;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  white-space: nowrap;
-}
-.dl-btn:hover,
-.dl-btn:active {
-  background: rgba(76, 76, 76, 0.5);
-  border-color: #b8b8b8;
-  box-shadow: 0 0 20px #4C4C4C;
-  transform: translateY(-1px);
-  color: #ffffff;
-}
-.dl-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
-
-.footer-note {
-  margin-top: 56px;
-  font-size: 10px;
-  color: #6a6a6a;
-  line-height: 1.7;
-  letter-spacing: 0.05em;
-  border-left: 2px solid #242424;
-  padding-left: 14px;
-}
-
-@media (max-width: 480px) {
-  .wrap { padding: 32px 14px 72px; }
-  .game-row { gap: 10px; padding: 16px 0; }
-  .game-name { font-size: 14px; }
-  .dl-btn { font-size: 9px; padding: 8px 11px; }
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bytez Toolkit &mdash; Steam DRM-Free .so</title>
+<meta name="description" content="Drop-in libsteam_api.so stubs for games that ship without Steamworks.">
+<meta name="theme-color" content="#35424e">
+<link rel="stylesheet" href="assets/oldgtk.css">
+<link rel="stylesheet" href="assets/pages.css">
 </head>
 <body>
 
-<canvas id="bgcanvas"></canvas>
+<div class="window">
 
-<div class="wrap">
-  <a class="back" href="index.html">← back</a>
-
-  <div class="title">Steam DRM-Free <span class="y">.so</span> files</div>
-  <div class="subtitle">cracked by bytez</div>
-
-  <div class="section-tag">available cracks</div>
-
-  <div class="game-list">
-
-    <div class="game-row">
-      <span class="game-dot"></span>
-      <div class="game-info">
-        <div class="game-name">Hamster Hunter</div>
-        <div class="game-meta">Steam · DRM-free · .so</div>
-      </div>
-      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/hh/libsteam_api.so" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download .so
-      </a>
+  <div class="titlebar">
+    <div class="title-left">
+      <img class="app-icon" src="pfp.jpg" alt="">
+      <span class="title-text">Bytez Toolkit &mdash; Steam DRM-Free .so</span>
     </div>
-
-    <div class="game-row">
-      <span class="game-dot"></span>
-      <div class="game-info">
-        <div class="game-name">Graveyard Keeper</div>
-        <div class="game-meta">Steam · DRM-free · .so</div>
-      </div>
-      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/gk/libsteam_api.so" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download .so
-      </a>
+    <div class="win-controls" aria-hidden="true">
+      <span class="wc wc-min">&#8212;</span><span class="wc wc-max">&#9633;</span><span class="wc wc-close">&#10005;</span>
     </div>
-
-    <div class="game-row">
-      <span class="game-dot"></span>
-      <div class="game-info">
-        <div class="game-name">Stardew Valley</div>
-        <div class="game-meta">Steam · DRM-free · .so</div>
-      </div>
-      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/sv/libsteam_api.so" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download .so
-      </a>
-    </div>
-
-    <div class="game-row">
-      <span class="game-dot"></span>
-      <div class="game-info">
-        <div class="game-name">Project Zomboid</div>
-        <div class="game-meta">Steam · DRM-free · .so</div>
-      </div>
-      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/pz/libsteam_api.so" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download .so
-      </a>
-    </div>
-
-    <div class="game-row">
-      <span class="game-dot"></span>
-      <div class="game-info">
-        <div class="game-name">Postal 2</div>
-        <div class="game-meta">Steam · DRM-free · .so</div>
-      </div>
-      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/p2/libsteam_api.so" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download .so
-      </a>
-    </div>
-
-    <div class="game-row">
-      <span class="game-dot"></span>
-      <div class="game-info">
-        <div class="game-name">Buckshot Roullete</div>
-        <div class="game-meta">Steam · DRM-free · .so</div>
-      </div>
-      <a class="dl-btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/br/libsteam_api.so" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download .so
-      </a>
-    </div>
-
   </div>
 
-  <div class="footer-note">
-    THE GAME FILES ARE NOT INCLUDED JUST THE STUBS!
+  <div class="menubar" role="menubar">
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>F</u>ile</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="index.html" role="menuitem">Home</a>
+        <a class="menu-item" href="roblox-offsets.html" role="menuitem">Roblox Offsets</a>
+        <a class="menu-item" href="steam-drm-free.html" role="menuitem"><span class="check">&#10003;</span>Steam DRM-Free .so</a>
+        <div class="menu-sep"></div>
+        <a class="menu-item" href="https://github.com/bytezgit" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub repository</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>E</u>dit</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="find" role="menuitem">Find<span class="key">Ctrl+F</span></button>
+        <button class="menu-item" data-action="copy-link" role="menuitem">Copy page link</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>V</u>iew</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="refresh" role="menuitem">Refresh</button>
+        <button class="menu-item" data-action="maximize" role="menuitem">Maximize window</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>T</u>ools</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="dump.txt" role="menuitem">Open dump.txt</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>H</u>elp</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="about" role="menuitem">About Bytez Toolkit</button>
+        <button class="menu-item" data-action="shortcuts" role="menuitem">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="tb-btn nav-toggle" data-nav-toggle aria-label="Toggle navigation" aria-expanded="false" title="Navigation">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+    </button>
+    <button class="tb-btn" onclick="history.back()" title="Back" aria-label="Back">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
+    </button>
+    <button class="tb-btn tb-optional" onclick="history.forward()" title="Forward" aria-label="Forward">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+    </button>
+    <a class="tb-btn" href="index.html" title="Home" aria-label="Home">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7l6-5 6 5v7H2z"/><path d="M6 14V9h4v5"/></svg>
+    </a>
+    <span class="tb-sep"></span>
+    <button class="tb-btn" data-action="refresh" title="Refresh" aria-label="Refresh">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5V2m0 3H10"/><path d="M13 5a5.5 5.5 0 1 0 .4 5"/></svg>
+    </button>
+    <label class="searchbox">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+      <input type="text" data-search placeholder="Search stubs" aria-label="Search stubs" autocomplete="off" spellcheck="false">
+    </label>
+    <span class="toolbar-note">Ctrl+F</span>
+  </div>
+
+  <div class="workspace">
+
+    <aside class="tree-pane" aria-label="Explorer">
+      <div class="tree-row" style="--d:0">
+        <span class="tw blank"></span><span class="icon icon-app"></span><span>Bytez Toolkit</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-href="index.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Home</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="projects" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Projects</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Roblox Offsets</span>
+      </div>
+      <div class="tree-row selected" style="--d:2" data-parent="projects" data-href="steam-drm-free.html" aria-current="page">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Steam DRM-Free .so</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="https://bytezdev.itch.io/linuxce">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>LinuxCE</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="reference" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Reference</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="dump.txt">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>dump.txt</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="links" aria-expanded="false">
+        <span class="tw">+</span><span class="icon icon-folder"></span><span>Links</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://github.com/bytezgit">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>GitHub</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://discord.com/users/1327976719541469268">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Discord</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://steamcommunity.com/id/realbytez">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Steam</span>
+      </div>
+    </aside>
+
+    <div class="splitter" role="separator" aria-orientation="vertical" title="Drag to resize. Double-click to reset."></div>
+
+    <main class="content">
+
+      <fieldset class="group">
+        <legend>Steam DRM-Free .so</legend>
+        <div class="page-summary">
+          <div class="page-summary-main">
+            <h1>Steam DRM-Free .so</h1>
+            <p>
+              Drop-in <code>libsteam_api.so</code> replacements for games that ship without
+              Steamworks. Replace the original library with the stub for your build. Stubs only
+              &mdash; <b>game files are not included</b>.
+            </p>
+            <div class="facts">
+              <span class="fact"><b>06</b> stubs</span>
+              <span class="fact"><b>linux</b> target</span>
+              <span class="fact"><b>1:1</b> drop-in</span>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Available stubs</legend>
+        <div class="grid-tools">
+          <span id="stubCount">6 items</span>
+          <span class="grid-hint">Sorted by name</span>
+        </div>
+        <div class="grid-scroll">
+          <table class="grid grid--stubs">
+            <thead>
+              <tr>
+                <th class="c-num">#</th>
+                <th class="c-game">Game</th>
+                <th class="c-target">Target</th>
+                <th class="c-kind">File</th>
+                <th class="c-dl">Download</th>
+              </tr>
+            </thead>
+            <tbody id="stubRows">
+              <tr data-row data-search="buckshot roulette linux libsteam_api.so">
+                <td class="c-num">01</td>
+                <td class="c-game">Buckshot Roulette</td>
+                <td class="c-target">linux</td>
+                <td class="c-kind">libsteam_api.so</td>
+                <td class="c-dl"><a class="btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/br/libsteam_api.so" target="_blank" rel="noopener noreferrer">Download</a></td>
+              </tr>
+              <tr data-row data-search="graveyard keeper linux libsteam_api.so">
+                <td class="c-num">02</td>
+                <td class="c-game">Graveyard Keeper</td>
+                <td class="c-target">linux</td>
+                <td class="c-kind">libsteam_api.so</td>
+                <td class="c-dl"><a class="btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/gk/libsteam_api.so" target="_blank" rel="noopener noreferrer">Download</a></td>
+              </tr>
+              <tr data-row data-search="hamster hunter linux libsteam_api.so">
+                <td class="c-num">03</td>
+                <td class="c-game">Hamster Hunter</td>
+                <td class="c-target">linux</td>
+                <td class="c-kind">libsteam_api.so</td>
+                <td class="c-dl"><a class="btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/hh/libsteam_api.so" target="_blank" rel="noopener noreferrer">Download</a></td>
+              </tr>
+              <tr data-row data-search="project zomboid linux libsteam_api.so">
+                <td class="c-num">04</td>
+                <td class="c-game">Project Zomboid</td>
+                <td class="c-target">linux</td>
+                <td class="c-kind">libsteam_api.so</td>
+                <td class="c-dl"><a class="btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/pz/libsteam_api.so" target="_blank" rel="noopener noreferrer">Download</a></td>
+              </tr>
+              <tr data-row data-search="postal 2 linux libsteam_api.so">
+                <td class="c-num">05</td>
+                <td class="c-game">Postal 2</td>
+                <td class="c-target">linux</td>
+                <td class="c-kind">libsteam_api.so</td>
+                <td class="c-dl"><a class="btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/p2/libsteam_api.so" target="_blank" rel="noopener noreferrer">Download</a></td>
+              </tr>
+              <tr data-row data-search="stardew valley linux libsteam_api.so">
+                <td class="c-num">06</td>
+                <td class="c-game">Stardew Valley</td>
+                <td class="c-target">linux</td>
+                <td class="c-kind">libsteam_api.so</td>
+                <td class="c-dl"><a class="btn" href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/stubs/sv/libsteam_api.so" target="_blank" rel="noopener noreferrer">Download</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-tools" id="emptyState" hidden>
+          <span>No stubs match that search.</span>
+          <button class="btn-mini" id="clearSearch" type="button">Clear search</button>
+        </div>
+      </fieldset>
+
+      <div class="notice">
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M10 2L1.5 17h17z" fill="#f4d03f" stroke="#8a6d00" stroke-width="1"/>
+          <rect x="9.2" y="6.5" width="1.6" height="6" fill="#3c3519"/>
+          <circle cx="10" cy="14.4" r="1" fill="#3c3519"/>
+        </svg>
+        <div><b>Note:</b> back up the original <code>libsteam_api.so</code> before replacing it. Stubs are provided as-is, with no warranty.</div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="statusbar">
+    <span class="status-cell" id="status">Ready</span>
+    <span class="status-sep"></span>
+    <span class="status-cell hide-sm" id="count">6 stubs</span>
+    <span class="status-spacer"></span>
+    <span class="status-sep hide-sm"></span>
+    <span class="status-cell hide-sm" data-clock>--:--:--</span>
+    <span class="grip" aria-hidden="true"></span>
+  </div>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <div class="dialog-title">
+      <span id="dialogTitle">About Bytez Toolkit</span>
+      <button class="dialog-x" data-dialog-close aria-label="Close">&#10005;</button>
+    </div>
+    <div class="dialog-body" id="dialogBody"></div>
+    <div class="dialog-actions"><button class="btn" data-dialog-close>OK</button></div>
   </div>
 </div>
 
+<script src="assets/oldgtk.js"></script>
 <script>
-const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) ||
-                 ('ontouchstart' in window && window.innerWidth < 768);
+  (function () {
+    const rows = Array.from(document.querySelectorAll('#stubRows tr[data-row]'));
+    const empty = document.getElementById('emptyState');
+    const stubCount = document.getElementById('stubCount');
+    const search = document.querySelector('[data-search]');
 
-const bgC = document.getElementById('bgcanvas');
-const bgX = bgC.getContext('2d');
-let W, H;
+    WF.onFilter = (term) => {
+      let visible = 0;
+      rows.forEach((row) => {
+        const hit = !term || row.dataset.search.includes(term);
+        row.hidden = !hit;
+        if (hit) visible++;
+      });
 
-function resize() {
-  W = bgC.width = window.innerWidth;
-  H = bgC.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+      empty.hidden = visible !== 0;
+      stubCount.textContent = term ? visible + ' of ' + rows.length + ' items' : rows.length + ' items';
+      WF.setCount(term ? visible + ' of ' + rows.length + ' stubs' : rows.length + ' stubs');
+      WF.setStatus(term ? visible + ' match' + (visible === 1 ? '' : 'es') : 'Ready');
+    };
 
-function noise2(x, y, t) {
-  return (
-    Math.sin(x * 0.008 + t * 0.3) *
-    Math.cos(y * 0.011 + t * 0.2) +
-    Math.sin(x * 0.015 - y * 0.009 + t * 0.15)
-  ) * 0.5;
-}
-
-const PARTICLE_COUNT = isMobile ? 40 : 70;
-let particles = [];
-
-function makeParticle() {
-  return {
-    x: Math.random() * W,
-    y: Math.random() * H,
-    vx: 0,
-    vy: 0,
-    maxLife: 200 + Math.random() * 400,
-    age: 0,
-    size: Math.random() * 1.4 + 0.3
-  };
-}
-for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(makeParticle());
-
-let t = 0;
-let mx = -999, my = -999;
-
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-document.addEventListener('touchmove', e => {
-  if (e.touches.length > 0) { mx = e.touches[0].clientX; my = e.touches[0].clientY; }
-}, { passive: true });
-
-function loop() {
-  requestAnimationFrame(loop);
-  t += 0.016;
-
-  bgX.fillStyle = 'rgba(0,0,0,0.18)';
-  bgX.fillRect(0, 0, W, H);
-
-  for (let i = 0; i < (isMobile ? 2 : 4); i++) {
-    const sx = Math.random() * W, sy = Math.random() * H;
-    const angle = noise2(sx, sy, t) * Math.PI * 2;
-    bgX.beginPath();
-    bgX.moveTo(sx, sy);
-    bgX.lineTo(sx + Math.cos(angle) * 12, sy + Math.sin(angle) * 12);
-    bgX.strokeStyle = 'rgba(140,140,140,0.04)';
-    bgX.lineWidth = 1;
-    bgX.stroke();
-  }
-
-  for (let p of particles) {
-    const angle = noise2(p.x, p.y, t) * Math.PI * 2;
-    const speed = 0.5;
-    const cdx = p.x - mx, cdy = p.y - my;
-    const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
-    let cx = 0, cy = 0;
-    if (cdist < 150 && cdist > 1) {
-      cx = (cdx / cdist) * (150 - cdist) * 0.006;
-      cy = (cdy / cdist) * (150 - cdist) * 0.006;
-    }
-    p.vx = p.vx * 0.85 + (Math.cos(angle) * speed * 0.15 + cx);
-    p.vy = p.vy * 0.85 + (Math.sin(angle) * speed * 0.15 + cy);
-    p.x += p.vx;
-    p.y += p.vy;
-    p.age++;
-
-    if (p.x < -5) p.x = W + 5;
-    if (p.x > W + 5) p.x = -5;
-    if (p.y < -5) p.y = H + 5;
-    if (p.y > H + 5) p.y = -5;
-
-    const life = 1 - (p.age / p.maxLife);
-    if (life < 0) { Object.assign(p, makeParticle()); continue; }
-
-    bgX.beginPath();
-    bgX.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    bgX.fillStyle = `rgba(150,150,150,${0.45 * life})`;
-    bgX.fill();
-  }
-
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const d = Math.sqrt(dx * dx + dy * dy);
-      if (d < 110) {
-        bgX.beginPath();
-        bgX.moveTo(particles[i].x, particles[i].y);
-        bgX.lineTo(particles[j].x, particles[j].y);
-        bgX.strokeStyle = `rgba(150,150,150,${0.1 * (1 - d / 110)})`;
-        bgX.lineWidth = 0.8;
-        bgX.stroke();
-      }
-    }
-  }
-}
-loop();
+    document.getElementById('clearSearch').addEventListener('click', () => {
+      search.value = '';
+      WF.onFilter('');
+      search.focus();
+    });
+  })();
 </script>
 </body>
 </html>
