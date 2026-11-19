@@ -1,0 +1,42 @@
+# 2c6fd5e09aaf4cfa_decrypted.exe
+
+[TASK_SCHEDULER]
+task_scheduler.target_fps 0x8104130
+
+[DATAMODEL]
+datamodel.pointer 0x8e16368
+datamodel.real 0x1f8
+datamodel.place_id 0x1a0
+datamodel.game_id 0x198
+datamodel.require_bypass 0xbc4
+datamodel.workspace 0x358
+
+[INSTANCE]
+instance.name 0x68
+instance.name_str 0x0
+instance.class_desc 0x18
+instance.class_name 0x8
+instance.children_start 0x70
+instance.children_end 0x8
+instance.child_stride 0x10
+instance.value_base 0xa0
+instance.local_player 0x118
+instance.self 0x8
+
+[HUMANOID]
+humanoid.max_slope_angle 0x1a4
+humanoid.max_health 0x1a0
+humanoid.health 0x184
+humanoid.jump_power 0x19c
+humanoid.hip_height 0x188
+humanoid.walkspeed 0x1c8
+
+[SCRIPT]
+script.pointer 0x18
+script.size 0x28
+script.capacity 0x30
+script.cache_key 0x0
+script.modulescript.pointer 0x120
+script.modulescript.module_state 0x138
+script.modulescript.module_state_basicscan 0x138
+script.localscript.pointer 0x178
