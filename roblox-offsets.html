@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bytez Toolkit &mdash; Roblox Offsets</title>
+<meta name="description" content="Roblox memory offsets, separated by category, searchable and copyable.">
+<meta name="theme-color" content="#35424e">
+<link rel="stylesheet" href="assets/oldgtk.css">
+<link rel="stylesheet" href="assets/pages.css">
+</head>
+<body>
+
+<div class="window">
+
+  <div class="titlebar">
+    <div class="title-left">
+      <img class="app-icon" src="pfp.jpg" alt="">
+      <span class="title-text">Bytez Toolkit &mdash; Roblox Offsets</span>
+    </div>
+    <div class="win-controls" aria-hidden="true">
+      <span class="wc wc-min">&#8212;</span><span class="wc wc-max">&#9633;</span><span class="wc wc-close">&#10005;</span>
+    </div>
+  </div>
+
+  <div class="menubar" role="menubar">
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>F</u>ile</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="index.html" role="menuitem">Home</a>
+        <a class="menu-item" href="roblox-offsets.html" role="menuitem"><span class="check">&#10003;</span>Roblox Offsets</a>
+        <a class="menu-item" href="steam-drm-free.html" role="menuitem">Steam DRM-Free .so</a>
+        <div class="menu-sep"></div>
+        <a class="menu-item" href="https://github.com/bytezgit" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub repository</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>E</u>dit</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="find" role="menuitem">Find<span class="key">Ctrl+F</span></button>
+        <button class="menu-item" data-action="copy-link" role="menuitem">Copy page link</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>V</u>iew</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="refresh" role="menuitem">Refresh</button>
+        <button class="menu-item" data-action="maximize" role="menuitem">Maximize window</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>T</u>ools</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="dump.txt" role="menuitem">Open dump.txt</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>H</u>elp</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="about" role="menuitem">About Bytez Toolkit</button>
+        <button class="menu-item" data-action="shortcuts" role="menuitem">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="tb-btn nav-toggle" data-nav-toggle aria-label="Toggle navigation" aria-expanded="false" title="Navigation">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+    </button>
+    <button class="tb-btn" onclick="history.back()" title="Back" aria-label="Back">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
+    </button>
+    <button class="tb-btn tb-optional" onclick="history.forward()" title="Forward" aria-label="Forward">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+    </button>
+    <a class="tb-btn" href="index.html" title="Home" aria-label="Home">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7l6-5 6 5v7H2z"/><path d="M6 14V9h4v5"/></svg>
+    </a>
+    <span class="tb-sep"></span>
+    <button class="tb-btn" data-action="refresh" title="Refresh" aria-label="Refresh">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5V2m0 3H10"/><path d="M13 5a5.5 5.5 0 1 0 .4 5"/></svg>
+    </button>
+    <label class="searchbox">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+      <input type="text" data-search placeholder="Search offsets" aria-label="Search offsets" autocomplete="off" spellcheck="false">
+    </label>
+    <span class="toolbar-note">Ctrl+F</span>
+  </div>
+
+  <div class="workspace">
+
+    <aside class="tree-pane" aria-label="Explorer">
+      <div class="tree-row" style="--d:0">
+        <span class="tw blank"></span><span class="icon icon-app"></span><span>Bytez Toolkit</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-href="index.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Home</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="projects" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Projects</span>
+      </div>
+      <div class="tree-row selected" style="--d:2" data-parent="projects" data-href="roblox-offsets.html" aria-current="page">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Roblox Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="steam-drm-free.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Steam DRM-Free .so</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="https://bytezdev.itch.io/linuxce">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>LinuxCE</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="reference" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Reference</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="dump.txt">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>dump.txt</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="links" aria-expanded="false">
+        <span class="tw">+</span><span class="icon icon-folder"></span><span>Links</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://github.com/bytezgit">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>GitHub</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://discord.com/users/1327976719541469268">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Discord</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://steamcommunity.com/id/realbytez">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Steam</span>
+      </div>
+    </aside>
+
+    <div class="splitter" role="separator" aria-orientation="vertical" title="Drag to resize. Double-click to reset."></div>
+
+    <main class="content">
+
+      <fieldset class="group">
+        <legend>Roblox Offsets</legend>
+        <div class="page-summary">
+          <div class="page-summary-main">
+            <h1>Roblox Offsets</h1>
+            <p>
+              Roblox offsets for the latest version (More will be added soon, maybe)
+            </p>
+            <div class="facts">
+              <span class="fact"><b id="statCats">&mdash;</b> categories</span>
+              <span class="fact"><b id="statRows">&mdash;</b> offsets</span>
+              <span class="fact"><b>0x</b> hex addresses</span>
+            </div>
+            <div class="source-line">Source: <b id="dumpSource">dump.txt</b> &mdash; verify against your build</div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="tabs" role="tablist" aria-label="Offset views">
+        <button class="tab active" role="tab" aria-selected="true" aria-controls="panelTable" id="tabTable" data-tab="table">Table</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panelRaw" id="tabRaw" data-tab="raw">Raw dump</button>
+      </div>
+
+      <div class="tab-panel" id="panelTable" role="tabpanel" aria-labelledby="tabTable">
+        <div class="grid-tools">
+          <span id="tableCount">loading&hellip;</span>
+          <span class="grid-hint">Click a row to select &middot; Copy copies the address</span>
+        </div>
+        <div class="grid-scroll">
+          <table class="grid grid--offsets">
+            <thead>
+              <tr>
+                <th class="c-key">Key</th>
+                <th class="c-addr">Address</th>
+                <th class="c-copy">Copy</th>
+              </tr>
+            </thead>
+            <tbody id="offsetRows">
+              <tr><td colspan="3" class="muted">loading dump.txt&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-tools" id="emptyState" hidden>
+          <span>No offsets match that search.</span>
+          <button class="btn-mini" id="clearSearch" type="button">Clear search</button>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panelRaw" role="tabpanel" aria-labelledby="tabRaw" hidden>
+        <div class="raw-tools">
+          <span>dump.txt</span>
+          <button class="btn-mini" id="copyRaw" type="button">Copy raw</button>
+        </div>
+        <pre class="raw" id="rawDump">loading&hellip;</pre>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="statusbar">
+    <span class="status-cell" id="status">Loading</span>
+    <span class="status-sep"></span>
+    <span class="status-cell hide-sm" id="count">&mdash; offsets</span>
+    <span class="status-spacer"></span>
+    <span class="status-sep hide-sm"></span>
+    <span class="status-cell hide-sm" data-clock>--:--:--</span>
+    <span class="grip" aria-hidden="true"></span>
+  </div>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <div class="dialog-title">
+      <span id="dialogTitle">About Bytez Toolkit</span>
+      <button class="dialog-x" data-dialog-close aria-label="Close">&#10005;</button>
+    </div>
+    <div class="dialog-body" id="dialogBody"></div>
+    <div class="dialog-actions"><button class="btn" data-dialog-close>OK</button></div>
+  </div>
+</div>
+
+<script src="assets/oldgtk.js"></script>
+<script>
+  (function () {
+    const root = document.getElementById('offsetRows');
+    const empty = document.getElementById('emptyState');
+    const tableCount = document.getElementById('tableCount');
+    const raw = document.getElementById('rawDump');
+    const statCats = document.getElementById('statCats');
+    const statRows = document.getElementById('statRows');
+    const sourceEl = document.getElementById('dumpSource');
+    const search = document.querySelector('[data-search]');
+
+    let groups = [];
+    let total = 0;
+    let selectedRow = null;
+    let rawText = '';
+
+    const parse = (text) => {
+      const cats = [];
+      let current = null;
+      let source = '';
+
+      for (const rawLine of text.split(/\r?\n/)) {
+        const line = rawLine.trim();
+        if (!line) continue;
+
+        if (line.startsWith('#')) {
+          if (!source) source = line.replace(/^#+\s*/, '').trim();
+          continue;
+        }
+
+        const catMatch = line.match(/^\[(.+)\]$/);
+        if (catMatch) {
+          current = { name: catMatch[1].trim(), rows: [] };
+          cats.push(current);
+          continue;
+        }
+
+        const rowMatch = line.match(/^(\S+)\s+(\S+)$/);
+        if (rowMatch && current) current.rows.push({ key: rowMatch[1], value: rowMatch[2] });
+      }
+
+      return { cats, source };
+    };
+
+    const selectRow = (row) => {
+      if (selectedRow) selectedRow.classList.remove('selected');
+      selectedRow = row;
+      if (row) row.classList.add('selected');
+    };
+
+    const render = (cats) => {
+      const frag = document.createDocumentFragment();
+      groups = [];
+      total = 0;
+
+      cats.forEach((cat) => {
+        const head = document.createElement('tr');
+        head.className = 'grid-group';
+        head.dataset.groupHead = '';
+
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+
+        const hash = document.createElement('span');
+        hash.className = 'hash';
+        hash.textContent = '#';
+
+        const name = document.createElement('span');
+        name.textContent = cat.name;
+
+        const count = document.createElement('span');
+        count.className = 'group-count';
+        count.textContent = cat.rows.length + ' / ' + cat.rows.length;
+
+        cell.appendChild(hash);
+        cell.appendChild(name);
+        cell.appendChild(count);
+        head.appendChild(cell);
+        frag.appendChild(head);
+
+        const rows = [];
+
+        cat.rows.forEach((item) => {
+          const tr = document.createElement('tr');
+          tr.dataset.row = '';
+          tr.dataset.search = (cat.name + ' ' + item.key + ' ' + item.value).toLowerCase();
+
+          const keyCell = document.createElement('td');
+          keyCell.className = 'c-key';
+          const dot = item.key.lastIndexOf('.');
+          if (dot > 0 && dot < item.key.length - 1) {
+            const prefix = document.createElement('span');
+            prefix.className = 'key-prefix';
+            prefix.textContent = item.key.slice(0, dot + 1);
+            keyCell.appendChild(prefix);
+            keyCell.appendChild(document.createTextNode(item.key.slice(dot + 1)));
+          } else {
+            keyCell.textContent = item.key;
+          }
+
+          const addr = document.createElement('td');
+          addr.className = 'c-addr';
+          addr.textContent = item.value;
+
+          const copyCell = document.createElement('td');
+          copyCell.className = 'c-copy';
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-mini';
+          btn.dataset.copy = item.value;
+          btn.textContent = 'Copy';
+          btn.title = 'Copy ' + item.value;
+          copyCell.appendChild(btn);
+
+          tr.appendChild(keyCell);
+          tr.appendChild(addr);
+          tr.appendChild(copyCell);
+          frag.appendChild(tr);
+          rows.push(tr);
+        });
+
+        total += cat.rows.length;
+        groups.push({ head, rows, count });
+      });
+
+      root.replaceChildren(frag);
+      statCats.textContent = String(cats.length);
+      statRows.textContent = String(total);
+      WF.setCount(total + ' offsets');
+      tableCount.textContent = total + ' offsets in ' + cats.length + ' categories';
+      selectRow(groups[0] ? groups[0].rows[0] : null);
+      filter(search.value.trim().toLowerCase());
+    };
+
+    const filter = (term) => {
+      let visible = 0;
+
+      groups.forEach((group) => {
+        let hits = 0;
+        group.rows.forEach((row) => {
+          const hit = !term || row.dataset.search.includes(term);
+          row.hidden = !hit;
+          if (hit) hits++;
+        });
+        group.head.hidden = hits === 0;
+        group.count.textContent = hits + ' / ' + group.rows.length;
+        visible += hits;
+      });
+
+      empty.hidden = visible !== 0;
+      tableCount.textContent = term
+        ? visible + ' of ' + total + ' offsets'
+        : total + ' offsets in ' + groups.length + ' categories';
+      WF.setCount(term ? visible + ' of ' + total + ' offsets' : total + ' offsets');
+      WF.setStatus(term ? visible + ' match' + (visible === 1 ? '' : 'es') : 'Ready');
+
+      if (selectedRow && selectedRow.hidden) {
+        const next = groups.flatMap((g) => g.rows).find((r) => !r.hidden);
+        selectRow(next || null);
+      }
+    };
+
+    const copy = async (btn, value) => {
+      const row = btn.closest('tr');
+      if (row) selectRow(row);
+      const ok = await WF.copy(value, 'Copied ' + value);
+      btn.textContent = ok ? 'Copied' : 'Failed';
+      btn.classList.toggle('copied', ok);
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer = setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1200);
+    };
+
+    root.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-copy]');
+      if (btn) {
+        e.stopPropagation();
+        copy(btn, btn.dataset.copy);
+        return;
+      }
+      const row = e.target.closest('tr[data-row]');
+      if (row) selectRow(row);
+    });
+
+    root.addEventListener('dblclick', (e) => {
+      const row = e.target.closest('tr[data-row]');
+      if (!row) return;
+      const btn = row.querySelector('[data-copy]');
+      if (btn) copy(btn, btn.dataset.copy);
+    });
+
+    WF.onFilter = filter;
+
+    document.querySelectorAll('.tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle('active', active);
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        const rawTab = tab.dataset.tab === 'raw';
+        document.getElementById('panelTable').hidden = rawTab;
+        document.getElementById('panelRaw').hidden = !rawTab;
+        WF.setStatus(rawTab ? 'Raw dump view' : 'Table view');
+      });
+    });
+
+    document.getElementById('clearSearch').addEventListener('click', () => {
+      search.value = '';
+      filter('');
+      search.focus();
+    });
+
+    document.getElementById('copyRaw').addEventListener('click', () => {
+      if (rawText) WF.copy(rawText, 'Copied raw dump');
+    });
+
+    fetch('dump.txt', { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then((text) => {
+        rawText = text;
+        raw.textContent = text;
+        const { cats, source } = parse(text);
+        if (!cats.length) throw new Error('no categories found');
+        if (source) {
+          sourceEl.textContent = source;
+          sourceEl.title = source;
+        }
+        render(cats);
+      })
+      .catch((err) => {
+        console.error('offset dump failed to load:', err);
+        root.replaceChildren();
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 3;
+        const box = document.createElement('div');
+        box.className = 'load-error';
+        box.innerHTML = 'Could not load <code>dump.txt</code>. Serve this page over HTTP; the fetch API does not read local files.<br><br><code>python -m http.server</code>';
+        td.appendChild(box);
+        tr.appendChild(td);
+        root.appendChild(tr);
+        raw.textContent = 'Could not load dump.txt.';
+        tableCount.textContent = 'unavailable';
+        WF.setCount('unavailable');
+        WF.setStatus('dump.txt unavailable');
+      });
+  })();
+</script>
+</body>
+</html>
