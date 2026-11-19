@@ -2,1175 +2,320 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>bytez</title>
-<meta property="og:title" content="Bytez's Site">
-<meta property="og:description" content="i code random shit.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://bytezgit.github.io">
-<meta property="og:image" content="https://bytezgit.github.io/pfp.jpg">
-<meta property="og:image:width" content="512">
-<meta property="og:image:height" content="512">
-<meta name="theme-color" content="#4E4E4E">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bytez's Site">
-<meta name="twitter:description" content="i code random shit.">
-<meta name="twitter:image" content="https://bytezgit.github.io/pfp.jpg">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  overflow: hidden;
-  background: #000000;
-  font-family: 'JetBrains Mono', monospace;
-  color: #d0d0d0;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  html, body { cursor: auto; }
-  #cursor { display: none !important; }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  html, body { cursor: none; }
-}
-
-#bgcanvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
-
-#rippleCanvas {
-  position: fixed;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg,
-      rgba(0, 0, 0, 0.10) 0px,
-      rgba(0, 0, 0, 0.10) 1px,
-      transparent 1px,
-      transparent 3px);
-  opacity: 0.3;
-}
-
-#cursor {
-  position: fixed;
-  z-index: 999;
-  pointer-events: none;
-  width: 12px;
-  height: 12px;
-  border: 1.5px solid #8a8a8a;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.15s ease, height 0.15s ease, opacity 0.15s ease;
-  box-shadow: 0 0 8px #4C4C4C;
-  mix-blend-mode: screen;
-}
-
-#cursor.big {
-  width: 28px;
-  height: 28px;
-  opacity: 0.6;
-}
-
-#gate {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  transition: opacity 0.8s ease, filter 0.8s ease;
-}
-
-#gate.hidden {
-  opacity: 0;
-  filter: blur(20px);
-  pointer-events: none;
-}
-
-#enterBtn {
-  background: none;
-  border: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 400;
-  font-size: clamp(14px, 2.2vw, 18px);
-  letter-spacing: 0.2em;
-  text-transform: lowercase;
-  color: #b0b0b0;
-  text-shadow: 0 0 4px #4E4E4E, 0 0 16px #242424, 0 0 32px #191919;
-  animation: neonFlicker 4s infinite;
-  padding: 16px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-#enterBtn:active {
-  text-shadow: 0 0 6px #c0c0c0, 0 0 24px #4C4C4C, 0 0 60px #202020;
-}
-
-@keyframes neonFlicker {
-  0%, 4%, 6%, 84%, 100% { opacity: 1; }
-  5% { opacity: 0.35; }
-  85% { opacity: 0.65; }
-  86% { opacity: 1; }
-}
-
-main {
-  position: relative;
-  z-index: 10;
-  height: 100vh;
-  height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 1s ease 0.2s;
-  padding: 16px 16px 80px;
-  pointer-events: none;
-  perspective: 1200px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-main.show {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.layout {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0;
-  transform-style: preserve-3d;
-  transition: transform 0.15s ease-out;
-  will-change: transform;
-  max-height: 100%;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ─── invisible card wrapper ─── */
-.unified-card {
-  width: 100%;
-  max-width: 420px;
-  border-radius: 0;
-  overflow: visible;
-  box-shadow: none;
-  border: none;
-  background: transparent;
-}
-
-/* ─── invisible content panel ─── */
-.content {
-  width: 100%;
-  max-width: 420px;
-  text-align: left;
-  position: relative;
-  padding: 24px;
-  border-radius: 0;
-  border: none;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-/* ─── invisible bottom panel ─── */
-.side-panel {
-  width: 100%;
-  height: 40px;
-  border-radius: 0;
-  border: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  transition: opacity 0.6s ease;
-  opacity: 0;
-  pointer-events: none;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  margin-top: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.side-panel.show {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.pfp-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 8px;
-  position: relative;
-}
-
-.uname-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.pfp {
-  width: clamp(64px, 15vw, 96px);
-  height: clamp(64px, 15vw, 96px);
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #4C4C4C;
-  box-shadow: 0 0 15px #191919, 0 0 30px #0D0D0D;
-  transition: box-shadow 0.4s ease, transform 0.4s ease;
-  flex-shrink: 0;
-  order: 2;
-}
-
-.pfp.alive {
-  box-shadow: 0 0 30px #8a8a8a, 0 0 60px #4E4E4E;
-  transform: scale(1.04);
-}
-
-.uname {
-  font-size: clamp(36px, 10vw, 64px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-  color: #f0f0f0;
-  text-shadow: 0 0 20px rgba(0,0,0,0.6);
-}
-
-.uname .y {
-  color: #b0b0b0;
-  text-shadow: 0 0 20px #4C4C4C;
-}
-
-.utag {
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #8a8a8a;
-  margin-top: 8px;
-  margin-bottom: 26px;
-}
-
-.utag::before {
-  content: "— ";
-}
-
-.typeline {
-  font-size: 13px;
-  color: #b8b8b8;
-  line-height: 1.5;
-  min-height: 21px;
-  margin-bottom: 28px;
-  border-left: 2px solid #4C4C4C;
-  padding-left: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.typeline .cursor {
-  display: inline-block;
-  width: 8px;
-  height: 14px;
-  background: #b8b8b8;
-  margin-left: 2px;
-  animation: blink 0.9s steps(2) infinite;
-  vertical-align: middle;
-  box-shadow: 0 0 8px #4C4C4C;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-.section-tag {
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #7a7a7a;
-  margin-bottom: 10px;
-  margin-top: 22px;
-}
-
-.links {
-  display: flex;
-  flex-direction: column;
-}
-
-.linkbtn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #dcdcdc;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 11px 0;
-  border-bottom: 1px solid #242424;
-  position: relative;
-  transition: color 0.15s ease, padding-left 0.2s ease, border-color 0.2s ease, text-shadow 0.3s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.linkbtn:active {
-  color: #ffffff;
-  padding-left: 8px;
-  border-color: #4C4C4C;
-  text-shadow: 0 0 12px #8a8a8a;
-}
-
-.linkbtn:active .link-arrow {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.linkbtn:active .link-dot {
-  box-shadow: 0 0 12px #b8b8b8;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .linkbtn:hover {
-    color: #ffffff;
-    padding-left: 8px;
-    border-color: #4C4C4C;
-    text-shadow: 0 0 12px #8a8a8a;
-  }
-
-  .linkbtn:hover .link-arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .linkbtn:hover .link-dot {
-    box-shadow: 0 0 12px #b8b8b8;
-  }
-}
-
-.linkbtn.waking {
-  color: #c0c0c0;
-  padding-left: 4px;
-}
-
-.linkbtn.waking .link-dot {
-  box-shadow: 0 0 12px #b8b8b8;
-}
-
-.link-dot {
-  width: 5px;
-  height: 5px;
-  background: #b8b8b8;
-  box-shadow: 0 0 6px #4C4C4C;
-  flex-shrink: 0;
-  transition: box-shadow 0.3s ease;
-}
-
-.link-url {
-  font-size: 10px;
-  color: #7a7a7a;
-  font-weight: 400;
-  margin-left: auto;
-  pointer-events: none;
-}
-
-.link-arrow {
-  color: #b8b8b8;
-  font-size: 13px;
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: all 0.15s ease;
-  pointer-events: none;
-}
-
-.priv-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #8a8a8a;
-  padding: 11px 0;
-  border-bottom: 1px solid #242424;
-  transition: color 0.3s ease;
-}
-
-.priv-row.waking {
-  color: #c0c0c0;
-}
-
-.priv-row .link-dot {
-  background: #4C4C4C;
-  box-shadow: none;
-}
-
-.priv-desc {
-  font-size: 10px;
-  color: #6a6a6a;
-  font-weight: 400;
-  margin-left: auto;
-}
-
-.social-buttons {
-  position: absolute;
-  bottom: -40px;
-  right: 7px;
-  display: flex;
-  gap: 8px;
-}
-
-.social-btn {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(13, 13, 13, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid #4C4C4C;
-  border-radius: 8px;
-  color: #b8b8b8;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  position: relative;
-  overflow: hidden;
-}
-
-.social-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: #202020;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.social-btn:active::before {
-  opacity: 1;
-}
-
-.social-btn:active {
-  border-color: #b8b8b8;
-  box-shadow: 0 0 20px #4C4C4C;
-  transform: translateY(-1px);
-  color: #ffffff;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .social-btn:hover::before {
-    opacity: 1;
-  }
-  
-  .social-btn:hover {
-    border-color: #b8b8b8;
-    box-shadow: 0 0 20px #4C4C4C;
-    transform: translateY(-1px);
-    color: #ffffff;
-  }
-}
-
-.social-btn svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.side-divider {
-  width: 1px;
-  height: 16px;
-  background: #4C4C4C;
-}
-
-#views {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #7a7a7a;
-  white-space: nowrap;
-}
-
-#muteBtn {
-  background: none;
-  border: none;
-  color: #7a7a7a;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  transition: color 0.2s ease;
-  white-space: nowrap;
-  padding: 8px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-#muteBtn:active {
-  color: #dcdcdc;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  #muteBtn:hover {
-    color: #dcdcdc;
-  }
-}
-
-#visualizer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 64px;
-  z-index: 5;
-  display: flex;
-  align-items: flex-end;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-
-#visualizer.show {
-  opacity: 1;
-}
-
-#visualizer .bar {
-  flex: 1 1 0;
-  height: 1px;
-  background: #b8b8b8;
-  opacity: 0.5;
-  margin: 0 0.5px;
-}
-
-@media (max-width: 768px) {
-  main { padding: 20px 16px 90px; align-items: center; }
-  .layout { gap: 12px; width: 100%; max-width: 420px; }
-  .content { padding: 20px; }
-  .pfp-container { gap: 14px; }
-  .pfp { width: 64px; height: 64px; }
-  .uname { font-size: 42px; }
-  .utag { font-size: 10px; margin-bottom: 26px; }
-  .typeline { font-size: 13px; margin-bottom: 28px; }
-  .section-tag { font-size: 9px; margin-top: 22px; margin-bottom: 10px; }
-  .linkbtn, .priv-row { font-size: 14px; padding: 11px 0; }
-  .link-url, .priv-desc { font-size: 10px; }
-  .social-btn { width: 36px; height: 36px; }
-  .social-btn svg { width: 18px; height: 18px; }
-  .social-buttons { bottom: -40px; right: 7px; gap: 8px; }
-  .side-panel { height: 40px; padding: 0 16px; }
-  #visualizer { height: 64px; }
-}
-
-@media (max-width: 480px) {
-  main { padding: 16px 12px 80px; }
-  .content { padding: 16px; }
-  .pfp-container { gap: 12px; }
-  .pfp { width: 56px; height: 56px; }
-  .uname { font-size: 36px; }
-  .utag { font-size: 9px; margin-bottom: 22px; }
-  .typeline { font-size: 12px; margin-bottom: 24px; }
-  .section-tag { font-size: 8px; margin-top: 18px; margin-bottom: 8px; }
-  .linkbtn, .priv-row { font-size: 13px; padding: 10px 0; }
-  .link-url, .priv-desc { font-size: 9px; }
-  .social-btn { width: 32px; height: 32px; }
-  .social-btn svg { width: 16px; height: 16px; }
-  .social-buttons { bottom: -36px; right: 5px; gap: 6px; }
-  .side-panel { height: 40px; padding: 0 12px; }
-  #visualizer { height: 56px; }
-}
-
-@media (max-width: 380px) {
-  .content { padding: 14px 12px; }
-  .pfp { width: 48px; height: 48px; }
-  .uname { font-size: 30px; }
-  .utag { font-size: 8px; margin-bottom: 18px; }
-  .typeline { font-size: 11px; margin-bottom: 20px; }
-  .linkbtn, .priv-row { font-size: 12px; padding: 9px 0; }
-  .link-url, .priv-desc { font-size: 8px; }
-  .social-btn { width: 30px; height: 30px; }
-  .social-btn svg { width: 14px; height: 14px; }
-  .social-buttons { bottom: -32px; right: 4px; gap: 5px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bytez Toolkit</title>
+<meta name="description" content="Reverse engineering, game tooling, and web experiments.">
+<meta name="theme-color" content="#35424e">
+<link rel="stylesheet" href="assets/oldgtk.css">
+<link rel="stylesheet" href="assets/pages.css">
 </head>
 <body>
 
-<div id="cursor"></div>
-<canvas id="bgcanvas"></canvas>
-<canvas id="rippleCanvas"></canvas>
+<div class="window">
 
-<div id="gate">
-  <button id="enterBtn">click to enter</button>
-</div>
-
-<audio id="bgm" src="music.mp3" loop preload="none" crossorigin="anonymous"></audio>
-<div id="visualizer"></div>
-
-<main id="main">
- <div class="layout">
-  <div class="unified-card" id="tiltCard">
-    <div class="content">
-      <div class="pfp-container">
-        <div class="uname-wrapper">
-          <div class="uname">B<span class="y">y</span>tez</div>
-          <div class="utag">idk what to put here.</div>
-        </div>
-        <img src="pfp.jpg" alt="profile" class="pfp" id="pfpImg">
-        <div class="social-buttons">
-          <a href="https://discord.com/users/1327976719541469268" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Discord">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-            </svg>
-          </a>
-          <a href="https://steamcommunity.com/id/realbytez" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Steam">
-            <svg viewBox="23.274 22.154 55.114 25.231" fill="currentColor" style="width: 22px; height: 22px;">
-              <path d="M74.941 29.612a4.014 4.014 0 0 1-4.012 4.013c-2.216 0-3.988-1.797-3.988-4.013a4.012 4.012 0 0 1 8.026 0h-.026zm-4.037-7.458a7.442 7.442 0 0 0-7.458 7.409l-4.652 6.671c-.196-.025-.394-.025-.566-.025a5.646 5.646 0 0 0-2.855.788l-21.07-8.468a5.57 5.57 0 0 0-5.44-4.382 5.599 5.599 0 0 0-5.587 5.588 5.6 5.6 0 0 0 5.587 5.588 5.646 5.646 0 0 0 2.855-.788l21.07 8.468a5.57 5.57 0 0 0 5.44 4.382c2.88 0 5.269-2.215 5.538-5.021l7.164-5.243a7.453 7.453 0 0 0 7.458-7.458 7.453 7.453 0 0 0-7.458-7.458l-.026-.051zm0 2.461a5 5 0 0 1 4.997 4.997 5 5 0 0 1-4.997 4.997 5 5 0 0 1-4.996-4.997 5 5 0 0 1 4.996-4.997zm-42.067.985c1.575 0 2.929.886 3.619 2.166l-2.043-.812c-1.649-.591-3.471.221-4.11 1.846-.666 1.625.097 3.471 1.697 4.184l1.723.689a3.616 3.616 0 0 1-.886.099 4.103 4.103 0 0 1-4.111-4.111 4.103 4.103 0 0 1 4.111-4.111v.05zm29.366 12.062a4.101 4.101 0 0 1 4.111 4.11 4.102 4.102 0 0 1-4.111 4.11 4.055 4.055 0 0 1-3.619-2.19c.665.271 1.354.542 2.02.812a3.302 3.302 0 0 0 4.258-1.798 3.256 3.256 0 0 0-1.821-4.233l-1.698-.688c.295-.074.59-.1.886-.1l-.026-.023z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="typeline" id="typeline"><span class="cursor"></span></div>
-
-      <div class="section-tag">public</div>
-      <div class="links">
-        <a class="linkbtn" href="https://theke.vercel.app/" target="_blank" rel="noopener noreferrer">
-          <span class="link-dot"></span>Theke
-          <span class="link-url">theke.vercel.app</span>
-          <span class="link-arrow">→</span>
-        </a>
-        <a class="linkbtn" href="https://bytezdev.itch.io/linuxce" target="_blank" rel="noopener noreferrer">
-          <span class="link-dot"></span>LinuxCE
-          <span class="link-url">itch.io</span>
-          <span class="link-arrow">→</span>
-        </a>
-        <a class="linkbtn" href="https://bytezgit.github.io/VideoToASCII/" target="_blank" rel="noopener noreferrer">
-          <span class="link-dot"></span>VideoToASCII
-          <span class="link-url">website</span>
-          <span class="link-arrow">→</span>
-        </a>
-        <a class="linkbtn" href="steam-drm-free.html">
-          <span class="link-dot"></span>Steam DRM-Free .so
-          <span class="link-url">cracked games</span>
-          <span class="link-arrow">→</span>
-        </a>
-      </div>
-
-      <div class="section-tag">private</div>
-      <div class="links">
-        <div class="priv-row"><span class="link-dot"></span>Lex<span class="priv-desc">mc client</span></div>
-        <div class="priv-row"><span class="link-dot"></span>McBot<span class="priv-desc">mc automation</span></div>
-        <div class="priv-row"><span class="link-dot"></span>Brother<span class="priv-desc">linux assistant</span></div>
-      </div>
+  <div class="titlebar">
+    <div class="title-left">
+      <img class="app-icon" src="pfp.jpg" alt="">
+      <span class="title-text">Bytez Toolkit &mdash; Portfolio</span>
     </div>
-
-    <div class="side-panel" id="sidePanel">
-      <button id="muteBtn">mute</button>
-      <div class="side-divider"></div>
-      <div id="views"></div>
+    <div class="win-controls" aria-hidden="true">
+      <span class="wc wc-min">&#8212;</span><span class="wc wc-max">&#9633;</span><span class="wc wc-close">&#10005;</span>
     </div>
   </div>
- </div>
-</main>
 
+  <div class="menubar" role="menubar">
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>F</u>ile</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="index.html" role="menuitem"><span class="check">&#10003;</span>Home</a>
+        <a class="menu-item" href="roblox-offsets.html" role="menuitem">Roblox Offsets</a>
+        <a class="menu-item" href="steam-drm-free.html" role="menuitem">Steam DRM-Free .so</a>
+        <div class="menu-sep"></div>
+        <a class="menu-item" href="https://github.com/bytezgit" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub repository</a>
+        <a class="menu-item" href="https://discord.com/users/1327976719541469268" target="_blank" rel="noopener noreferrer" role="menuitem">Discord profile</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>E</u>dit</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="find" role="menuitem">Find<span class="key">Ctrl+F</span></button>
+        <button class="menu-item" data-action="copy-link" role="menuitem">Copy page link</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>V</u>iew</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="refresh" role="menuitem">Refresh</button>
+        <button class="menu-item" data-action="maximize" role="menuitem">Maximize window</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>T</u>ools</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="dump.txt" role="menuitem">Open dump.txt</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>H</u>elp</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="about" role="menuitem">About Bytez Toolkit</button>
+        <button class="menu-item" data-action="shortcuts" role="menuitem">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="tb-btn nav-toggle" data-nav-toggle aria-label="Toggle navigation" aria-expanded="false" title="Navigation">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+    </button>
+    <button class="tb-btn" onclick="history.back()" title="Back" aria-label="Back">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
+    </button>
+    <button class="tb-btn tb-optional" onclick="history.forward()" title="Forward" aria-label="Forward">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+    </button>
+    <a class="tb-btn" href="index.html" title="Home" aria-label="Home">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7l6-5 6 5v7H2z"/><path d="M6 14V9h4v5"/></svg>
+    </a>
+    <span class="tb-sep"></span>
+    <button class="tb-btn" data-action="refresh" title="Refresh" aria-label="Refresh">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5V2m0 3H10"/><path d="M13 5a5.5 5.5 0 1 0 .4 5"/></svg>
+    </button>
+    <label class="searchbox">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+      <input type="text" data-search placeholder="Search projects" aria-label="Search projects" autocomplete="off" spellcheck="false">
+    </label>
+    <span class="toolbar-note">Ctrl+F</span>
+  </div>
+
+  <div class="workspace">
+
+    <aside class="tree-pane" aria-label="Explorer">
+      <div class="tree-row" style="--d:0">
+        <span class="tw blank"></span><span class="icon icon-app"></span><span>Bytez Toolkit</span>
+      </div>
+      <div class="tree-row selected" style="--d:1" data-href="index.html" aria-current="page">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Home</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="projects" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Projects</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Roblox Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="steam-drm-free.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Steam DRM-Free .so</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="https://bytezdev.itch.io/linuxce">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>LinuxCE</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="reference" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Reference</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="dump.txt">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>dump.txt</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="links" aria-expanded="false">
+        <span class="tw">+</span><span class="icon icon-folder"></span><span>Links</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://github.com/bytezgit">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>GitHub</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://discord.com/users/1327976719541469268">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Discord</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://steamcommunity.com/id/realbytez">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Steam</span>
+      </div>
+    </aside>
+
+    <div class="splitter" role="separator" aria-orientation="vertical" title="Drag to resize. Double-click to reset."></div>
+
+    <main class="content">
+
+      <div class="home-top">
+        <fieldset class="group home-profile">
+          <legend>Profile</legend>
+          <div class="profile-body">
+            <img class="avatar" src="pfp.jpg" alt="Portrait of bytez">
+            <div class="profile-copy">
+              <h1>BYTEZ</h1>
+              <p class="profile-role">I Code Random Shit</p>
+              <p class="profile-bio">
+                  Idk man i just do random stuff here you can find steam game stubs (cracked) and some roblox offsets.
+                  Check out my work.
+              </p>
+              <div class="profile-facts">
+                <span><b>Focus</b> Random shit</span>
+                <span><b>Host</b> github.io</span>
+              </div>
+              <div class="profile-links">
+                <a class="lnk" href="https://discord.com/users/1327976719541469268" target="_blank" rel="noopener noreferrer">Discord</a>
+                <a class="lnk" href="https://steamcommunity.com/id/realbytez" target="_blank" rel="noopener noreferrer">Steam</a>
+                <a class="lnk" href="https://github.com/bytezgit" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="home-side">
+          <fieldset class="group">
+            <legend>Properties</legend>
+            <table class="props">
+              <tr class="prop-cat"><td colspan="2">Portfolio</td></tr>
+              <tr><td>Projects</td><td>3</td></tr>
+              <tr><td>Offsets</td><td>31</td></tr>
+              <tr><td>Stubs</td><td>6</td></tr>
+              <tr class="prop-cat"><td colspan="2">Build</td></tr>
+              <tr><td>Source</td><td>github.com/bytezgit</td></tr>
+            </table>
+          </fieldset>
+        </div>
+
+      <fieldset class="group home-work">
+        <legend>Selected Work</legend>
+        <div class="grid-tools">
+          <span>3 items</span>
+          <span class="grid-hint">Double-click a row to open</span>
+        </div>
+        <div class="grid-scroll">
+          <table class="grid">
+            <thead>
+              <tr>
+                <th class="c-num">#</th>
+                <th>Project</th>
+                <th class="c-type">Type</th>
+              </tr>
+            </thead>
+            <tbody id="workRows">
+              <tr data-row selected
+                  data-title="Roblox Offsets"
+                  data-sub="Memory dump reference / searchable table"
+                  data-href="roblox-offsets.html"
+                  data-search="roblox offsets reference memory dump">
+                <td class="c-num">01</td>
+                <td class="c-project"><a href="roblox-offsets.html">Roblox Offsets</a></td>
+                <td class="c-type">Reference</td>
+              </tr>
+              <tr data-row
+                  data-title="LinuxCE"
+                  data-sub="Linux cheat engine"
+                  data-href="https://bytezdev.itch.io/linuxce"
+                  data-search="linuxce linux cheat engine tool">
+                <td class="c-num">02</td>
+                <td class="c-project"><a href="https://bytezdev.itch.io/linuxce" target="_blank" rel="noopener noreferrer">LinuxCE</a></td>
+                <td class="c-type">Tool</td>
+              </tr>
+              <tr data-row
+                  data-title="Steam DRM-Free .so"
+                  data-sub="Drop-in libsteam_api.so stubs"
+                  data-href="steam-drm-free.html"
+                  data-search="steam drm-free stubs libsteam_api.so linux archive">
+                <td class="c-num">03</td>
+                <td class="c-project"><a href="steam-drm-free.html">Steam DRM-Free .so</a></td>
+                <td class="c-type">Archive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row-detail">
+          <div class="row-detail-main">
+            <div class="row-detail-title" id="detailTitle">Roblox Offsets</div>
+            <div class="row-detail-sub" id="detailSub">Memory dump reference / searchable table</div>
+          </div>
+          <a class="btn" id="detailLink" href="roblox-offsets.html">Open</a>
+        </div>
+      </fieldset>
+    </div>
+
+    <fieldset class="group">
+      <legend>Output</legend>
+      <div class="output" id="output" role="log" aria-live="polite"></div>
+    </fieldset>
+
+    </main>
+  </div>
+
+  <div class="statusbar">
+    <span class="status-cell" id="status">Loaded</span>
+    <span class="status-sep"></span>
+    <span class="status-cell hide-sm" id="count">3 projects</span>
+    <span class="status-spacer"></span>
+    <span class="status-sep hide-sm"></span>
+    <span class="status-cell hide-sm" data-clock>--:--:--</span>
+    <span class="grip" aria-hidden="true"></span>
+  </div>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <div class="dialog-title">
+      <span id="dialogTitle">About Bytez Toolkit</span>
+      <button class="dialog-x" data-dialog-close aria-label="Close">&#10005;</button>
+    </div>
+    <div class="dialog-body" id="dialogBody"></div>
+    <div class="dialog-actions"><button class="btn" data-dialog-close>OK</button></div>
+  </div>
+</div>
+
+<script src="assets/oldgtk.js"></script>
 <script>
-const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) ||
-                 ('ontouchstart' in window && window.innerWidth < 768);
+  (function () {
+    const rows = Array.from(document.querySelectorAll('#workRows tr[data-row]'));
+    const title = document.getElementById('detailTitle');
+    const sub = document.getElementById('detailSub');
+    const link = document.getElementById('detailLink');
 
-const cursorEl = document.getElementById('cursor');
-let mx = -999, my = -999;
-
-if (!isMobile) {
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX;
-    my = e.clientY;
-    cursorEl.style.left = mx + 'px';
-    cursorEl.style.top = my + 'px';
-  });
-
-  document.querySelectorAll('a,button').forEach(el => {
-    el.addEventListener('mouseenter', () => cursorEl.classList.add('big'));
-    el.addEventListener('mouseleave', () => cursorEl.classList.remove('big'));
-  });
-} else {
-  cursorEl.style.display = 'none';
-}
-
-document.addEventListener('touchmove', e => {
-  if (e.touches.length > 0) {
-    mx = e.touches[0].clientX;
-    my = e.touches[0].clientY;
-
-    if (Math.random() < 0.08) spawnRipple(mx, my);
-
-    if (Math.random() < 0.3) {
-      inkTrail.push({
-        x: mx + (Math.random() - 0.5) * 4,
-        y: my + (Math.random() - 0.5) * 4,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: (Math.random() - 0.5) * 0.8 - 0.2,
-        a: Math.min(0.7, 0.5),
-        r: Math.random() * 2.5 + 0.5,
-        life: 1
-      });
-    }
-  }
-}, { passive: true });
-
-document.addEventListener('touchstart', e => {
-  if (e.touches.length > 0) {
-    mx = e.touches[0].clientX;
-    my = e.touches[0].clientY;
-
-    const target = e.target;
-    if (target.closest('a.linkbtn') || target.closest('a.social-btn')) return;
-
-    spawnRipple(mx, my);
-
-    for (let i = 0; i < 8; i++) {
-      inkTrail.push({
-        x: mx,
-        y: my,
-        vx: (Math.random() - 0.5) * 3,
-        vy: (Math.random() - 0.5) * 3 - 0.5,
-        a: 0.6,
-        r: Math.random() * 3 + 1,
-        life: 1
-      });
-    }
-  }
-}, { passive: true });
-
-const bgC = document.getElementById('bgcanvas');
-const bgX = bgC.getContext('2d');
-let W, H;
-
-function resize() {
-  W = bgC.width = window.innerWidth;
-  H = bgC.height = window.innerHeight;
-}
-
-resize();
-window.addEventListener('resize', resize);
-window.addEventListener('orientationchange', () => {
-  setTimeout(resize, 100);
-});
-
-function noise2(x, y, t) {
-  return (
-    Math.sin(x * 0.008 + t * 0.3) *
-    Math.cos(y * 0.011 + t * 0.2) +
-    Math.sin(x * 0.015 - y * 0.009 + t * 0.15)
-  ) * 0.5;
-}
-
-const PARTICLE_COUNT = isMobile ? 50 : 90;
-let bgParticles = [];
-
-function makeParticle() {
-  return {
-    x: Math.random() * (W || window.innerWidth),
-    y: Math.random() * (H || window.innerHeight),
-    vx: 0,
-    vy: 0,
-    maxLife: 200 + Math.random() * 400,
-    age: 0,
-    size: Math.random() * 1.4 + 0.3,
-    hue: 0
-  };
-}
-
-for (let i = 0; i < PARTICLE_COUNT; i++) bgParticles.push(makeParticle());
-
-let ripples = [];
-
-function spawnRipple(x, y) {
-  ripples.push({ x, y, r: 0, maxR: 60 + Math.random() * 50, a: 0.5, speed: 1.5 + Math.random() });
-}
-
-let inkTrail = [];
-
-const ripC = document.getElementById('rippleCanvas');
-const ripX = ripC.getContext('2d');
-
-function resizeRip() {
-  ripC.width = window.innerWidth;
-  ripC.height = window.innerHeight;
-}
-
-resizeRip();
-window.addEventListener('resize', resizeRip);
-
-let bgT = 0;
-let audioEnergy = 0;
-let animating = false;
-let lastTime = 0;
-
-function mainLoop(ts) {
-  requestAnimationFrame(mainLoop);
-  const dt = Math.min((ts - lastTime) / 1000, 0.05);
-  lastTime = ts;
-  if (!animating) return;
-
-  bgT += dt;
-
-  bgX.fillStyle = 'rgba(0,0,0,0.18)';
-  bgX.fillRect(0, 0, W, H);
-
-  for (let i = 0; i < (isMobile ? 3 : 5); i++) {
-    const sx = Math.random() * W;
-    const sy = Math.random() * H;
-    const angle = noise2(sx, sy, bgT) * Math.PI * 2;
-    bgX.beginPath();
-    bgX.moveTo(sx, sy);
-    bgX.lineTo(sx + Math.cos(angle) * 12, sy + Math.sin(angle) * 12);
-    bgX.strokeStyle = 'rgba(140,140,140,0.04)';
-    bgX.lineWidth = 1;
-    bgX.stroke();
-  }
-
-  for (let p of bgParticles) {
-    const angle = noise2(p.x, p.y, bgT) * Math.PI * 2;
-    const speed = 0.4 + audioEnergy * 0.8;
-
-    const cdx = p.x - mx, cdy = p.y - my;
-    const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
-    let cx = 0, cy = 0;
-    if (cdist < 150 && cdist > 1) {
-      cx = (cdx / cdist) * (150 - cdist) * 0.006;
-      cy = (cdy / cdist) * (150 - cdist) * 0.006;
-    }
-
-    p.vx = p.vx * 0.85 + (Math.cos(angle) * speed * 0.15 + cx);
-    p.vy = p.vy * 0.85 + (Math.sin(angle) * speed * 0.15 + cy);
-    p.x += p.vx;
-    p.y += p.vy;
-    p.age++;
-
-    if (p.x < -5) p.x = W + 5;
-    if (p.x > W + 5) p.x = -5;
-    if (p.y < -5) p.y = H + 5;
-    if (p.y > H + 5) p.y = -5;
-
-    const life = 1 - (p.age / p.maxLife);
-    if (life < 0) {
-      Object.assign(p, makeParticle());
-      continue;
-    }
-
-    const pulse = 1 + audioEnergy * 0.6;
-    bgX.beginPath();
-    bgX.arc(p.x, p.y, p.size * pulse, 0, Math.PI * 2);
-    bgX.fillStyle = `rgba(150,150,150,${0.45 * life})`;
-    bgX.fill();
-  }
-
-  for (let i = 0; i < bgParticles.length; i++) {
-    for (let j = i + 1; j < bgParticles.length; j++) {
-      const dx = bgParticles[i].x - bgParticles[j].x,
-            dy = bgParticles[i].y - bgParticles[j].y;
-      const d = Math.sqrt(dx * dx + dy * dy);
-      if (d < 110) {
-        bgX.beginPath();
-        bgX.moveTo(bgParticles[i].x, bgParticles[i].y);
-        bgX.lineTo(bgParticles[j].x, bgParticles[j].y);
-        bgX.strokeStyle = `rgba(150,150,150,${0.1 * (1 - d / 110) * (1 + audioEnergy)})`;
-        bgX.lineWidth = 0.8;
-        bgX.stroke();
+    const select = (row) => {
+      rows.forEach((r) => r.classList.toggle('selected', r === row));
+      if (!row) return;
+      title.textContent = row.dataset.title;
+      sub.textContent = row.dataset.sub;
+      link.href = row.dataset.href;
+      link.textContent = /^https?:/.test(row.dataset.href) ? 'Open \u2197' : 'Open';
+      if (/^https?:/.test(row.dataset.href)) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else {
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
       }
-    }
-  }
+    };
 
-  for (let i = ripples.length - 1; i >= 0; i--) {
-    const rp = ripples[i];
-    rp.r += rp.speed;
-    rp.a -= 0.012;
-    if (rp.a <= 0) {
-      ripples.splice(i, 1);
-      continue;
-    }
-    bgX.beginPath();
-    bgX.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-    bgX.strokeStyle = `rgba(150,150,150,${rp.a})`;
-    bgX.lineWidth = 0.8;
-    bgX.stroke();
-  }
-
-  ripX.clearRect(0, 0, ripC.width, ripC.height);
-  for (let i = inkTrail.length - 1; i >= 0; i--) {
-    const ink = inkTrail[i];
-    ink.x += ink.vx;
-    ink.y += ink.vy;
-    ink.life -= 0.022;
-    if (ink.life <= 0) {
-      inkTrail.splice(i, 1);
-      continue;
-    }
-    ripX.beginPath();
-    ripX.arc(ink.x, ink.y, ink.r, 0, Math.PI * 2);
-    ripX.fillStyle = `rgba(150,150,150,${ink.a * ink.life})`;
-    ripX.fill();
-  }
-
-  proximityCheck();
-}
-
-requestAnimationFrame(ts => {
-  lastTime = ts;
-  requestAnimationFrame(mainLoop);
-});
-
-function proximityCheck() {
-  const pfp = document.getElementById('pfpImg');
-  if (pfp) {
-    const r = pfp.getBoundingClientRect();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    const d = Math.sqrt((mx - cx) ** 2 + (my - cy) ** 2);
-    pfp.classList.toggle('alive', d < 140);
-  }
-}
-
-const gate = document.getElementById('gate');
-const mainEl = document.getElementById('main');
-const bgm = document.getElementById('bgm');
-const muteBtn = document.getElementById('muteBtn');
-const sidePanel = document.getElementById('sidePanel');
-let muted = false;
-
-function enterSite() {
-  bgm.volume = 0.4;
-
-  const playPromise = bgm.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      document.addEventListener('touchstart', function playOnTouch() {
-        bgm.play().catch(() => {});
-        document.removeEventListener('touchstart', playOnTouch);
-      }, { once: true });
+    rows.forEach((row) => {
+      row.addEventListener('click', () => select(row));
+      row.addEventListener('dblclick', (e) => {
+        if (e.target.closest('a')) return;
+        const href = row.dataset.href;
+        if (/^https?:/.test(href)) window.open(href, '_blank', 'noopener');
+        else window.location.href = href;
+      });
     });
-  }
 
-  gate.classList.add('hidden');
-  mainEl.classList.add('show');
-  sidePanel.classList.add('show');
-  animating = true;
-  setTimeout(() => {
-    gate.remove();
-    startTyping();
-  }, 600);
-  initVisualizer();
-  spawnRipple(mx === -999 ? window.innerWidth / 2 : mx, my === -999 ? window.innerHeight / 2 : my);
-}
+    select(rows[0]);
 
-document.getElementById('enterBtn').addEventListener('click', enterSite);
-document.getElementById('enterBtn').addEventListener('touchend', e => {
-  e.preventDefault();
-  enterSite();
-});
+    WF.log('Bytez Toolkit Loaded.');
+    WF.log(rows.length + ' projects indexed.');
 
-muteBtn.addEventListener('click', toggleMute);
-muteBtn.addEventListener('touchend', e => {
-  e.preventDefault();
-  toggleMute();
-});
-
-function toggleMute() {
-  muted = !muted;
-  bgm.muted = muted;
-  muteBtn.textContent = muted ? 'unmute' : 'mute';
-}
-
-let audioCtx, analyser, freqData, barEls;
-const BAR_COUNT = isMobile ? 64 : 120;
-
-function initVisualizer() {
-  if (audioCtx) return;
-  const vizEl = document.getElementById('visualizer');
-  vizEl.classList.add('show');
-  for (let i = 0; i < BAR_COUNT; i++) {
-    const b = document.createElement('div');
-    b.className = 'bar';
-    vizEl.appendChild(b);
-  }
-  barEls = vizEl.querySelectorAll('.bar');
-  try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const src = audioCtx.createMediaElementSource(bgm);
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
-    analyser.smoothingTimeConstant = 0.82;
-    src.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    freqData = new Uint8Array(analyser.frequencyBinCount);
-    drawBars();
-  } catch (e) {
-    console.warn('audio ctx failed', e);
-  }
-}
-
-function drawBars() {
-  requestAnimationFrame(drawBars);
-  if (!analyser) return;
-  analyser.getByteFrequencyData(freqData);
-  let sum = 0;
-  for (let v of freqData) sum += v;
-  audioEnergy = (sum / freqData.length) / 128;
-  for (let i = 0; i < BAR_COUNT; i++) {
-    const idx = Math.floor((i / BAR_COUNT) * freqData.length * 0.75);
-    const v = freqData[idx] / 255;
-    barEls[i].style.height = Math.max(1, v * 64) + 'px';
-  }
-}
-
-const lines = [
-  "i code random shit.",
-  "i play random games.",
-  "guns.lol? lmao.",
-  "i build my ideas.",
-  "idc how."
-];
-const typeEl = document.getElementById('typeline');
-
-function startTyping() {
-  let li = 0, ci = 0;
-  const cursor = '<span class="cursor"></span>';
-
-  function typeChar() {
-    if (li >= lines.length) li = 0;
-    const line = lines[li];
-    if (ci <= line.length) {
-      typeEl.innerHTML = line.slice(0, ci) + cursor;
-      ci++;
-      setTimeout(typeChar, 38);
-    } else {
-      setTimeout(eraseChar, 1400);
-    }
-  }
-
-  function eraseChar() {
-    const line = lines[li];
-    if (ci >= 0) {
-      typeEl.innerHTML = line.slice(0, ci) + cursor;
-      ci--;
-      setTimeout(eraseChar, 22);
-    } else {
-      li++;
-      ci = 0;
-      setTimeout(typeChar, 260);
-    }
-  }
-
-  typeChar();
-}
-
-function updateViewCounter() {
-  const viewsEl = document.getElementById('views');
-  const BASE = 'https://countapi.mileshilliard.com/api/v1';
-  const KEY = 'bytez';
-  const VISITED_KEY = 'bytez_visit';
-
-  const hasVisited = localStorage.getItem(VISITED_KEY);
-
-  if (hasVisited) {
-    fetch(`${BASE}/get/${KEY}`)
-      .then(r => r.json())
-      .then(d => {
-        viewsEl.textContent = d.value + ' visits';
-        viewsEl.style.opacity = '1';
-      })
-      .catch(() => {
-        viewsEl.textContent = '—';
-        viewsEl.style.opacity = '1';
+    WF.onFilter = (term) => {
+      let visible = 0;
+      rows.forEach((row) => {
+        const hit = !term || row.dataset.search.includes(term);
+        row.hidden = !hit;
+        if (hit) visible++;
       });
-  } else {
-    fetch(`${BASE}/hit/${KEY}`)
-      .then(r => r.json())
-      .then(d => {
-        localStorage.setItem(VISITED_KEY, 'true');
-        viewsEl.textContent = d.value + ' visits';
-        viewsEl.style.opacity = '1';
-      })
-      .catch(() => {
-        viewsEl.textContent = '—';
-        viewsEl.style.opacity = '1';
-      });
-  }
-}
 
-updateViewCounter();
+      WF.setCount(term ? visible + ' of ' + rows.length + ' projects' : rows.length + ' projects');
+      WF.setStatus(term ? visible + ' match' + (visible === 1 ? '' : 'es') : 'Loaded');
 
-if (!isMobile) {
-  document.addEventListener('click', e => {
-    spawnRipple(e.clientX, e.clientY);
-    for (let i = 0; i < 12; i++) {
-      inkTrail.push({
-        x: e.clientX,
-        y: e.clientY,
-        vx: (Math.random() - 0.5) * 3,
-        vy: (Math.random() - 0.5) * 3 - 0.5,
-        a: 0.6,
-        r: Math.random() * 3 + 1,
-        life: 1
-      });
-    }
-  });
-}
-
-const tiltCard = document.getElementById('tiltCard');
-const layoutEl = document.querySelector('.layout');
-const TILT_MAX = isMobile ? 3 : 6;
-
-if (!isMobile) {
-  tiltCard.addEventListener('mousemove', handleTilt);
-  tiltCard.addEventListener('mouseleave', resetTilt);
-}
-
-function handleTilt(e) {
-  const r = layoutEl.getBoundingClientRect();
-  const px = (e.clientX - r.left) / r.width;
-  const py = (e.clientY - r.top) / r.height;
-  const rx = (0.5 - py) * TILT_MAX * 2;
-  const ry = (px - 0.5) * TILT_MAX * 2;
-  layoutEl.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-}
-
-function resetTilt() {
-  layoutEl.style.transform = 'rotateX(0deg) rotateY(0deg)';
-}
+      const current = rows.find((r) => r.classList.contains('selected'));
+      if (current && current.hidden) select(rows.find((r) => !r.hidden) || null);
+    };
+  })();
 </script>
 </body>
 </html>
