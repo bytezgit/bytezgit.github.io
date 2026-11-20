@@ -10,13 +10,12 @@
 <link rel="stylesheet" href="assets/oldgtk.css">
 <link rel="stylesheet" href="assets/pages.css">
 <style>
-.discord-bar{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:8px;background:#e4e6fb;border:1px solid;border-color:#fff #7a7a7a #7a7a7a #fff;box-shadow:inset -1px -1px #b8b8b8}
+.discord-bar{display:flex;align-items:center;gap:10px;padding:6px 10px;margin-top:8px;background:#d6d6d6;border:1px solid;border-color:#fff #7a7a7a #7a7a7a #fff}
 .discord-bar .discord-text{flex:1;min-width:0}
 .discord-bar .discord-text b{display:block}
-.discord-btn{flex:none;background:#5865F2;color:#fff!important;font-weight:bold;text-decoration:none;padding:5px 14px;border:1px solid;border-color:#a9b1ff #2a33a8 #2a33a8 #a9b1ff;box-shadow:1px 1px 0 #000;animation:dpulse 2s infinite}
-.discord-btn:hover{background:#6d79ff}
-.discord-btn:active{border-color:#2a33a8 #a9b1ff #a9b1ff #2a33a8;box-shadow:none;transform:translate(1px,1px)}
-@keyframes dpulse{50%{box-shadow:1px 1px 0 #000,0 0 0 3px rgba(88,101,242,.35)}}
+.discord-btn{flex:none;background:#6b75c9;color:#fff!important;text-decoration:none;padding:4px 12px;border:1px solid;border-color:#b4b9e6 #3b4380 #3b4380 #b4b9e6}
+.discord-btn:hover{background:#7983d6}
+.discord-btn:active{border-color:#3b4380 #b4b9e6 #b4b9e6 #3b4380}
 @media(max-width:600px){.discord-bar{flex-wrap:wrap}.discord-btn{width:100%;text-align:center}}
 </style>
 </head>
@@ -138,11 +137,6 @@
 
     <main class="content">
 
-      <div class="discord-bar">
-        <div class="discord-text"><b>Join the Discord server!</b>Updates, requests and help.</div>
-        <a class="discord-btn" href="https://discord.gg/NyMHdZSM5g" target="_blank" rel="noopener noreferrer">Join the Discord server!</a>
-      </div>
-
       <fieldset class="group">
         <legend>Steam DRM-Free .so</legend>
         <div class="page-summary">
@@ -238,6 +232,11 @@
           <circle cx="10" cy="14.4" r="1" fill="#3c3519"/>
         </svg>
         <div><b>Note:</b> back up the original <code>libsteam_api.so</code> before replacing it. Stubs are provided as-is, with no warranty.</div>
+      </div>
+
+      <div class="discord-bar">
+        <div class="discord-text"><b>Join the Discord server!</b>Updates, requests and help.</div>
+        <a class="discord-btn" href="https://discord.gg/NyMHdZSM5g" target="_blank" rel="noopener noreferrer">Join the Discord server!</a>
       </div>
 
     </main>
