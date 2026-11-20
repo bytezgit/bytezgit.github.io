@@ -43,6 +43,7 @@ misc.value 0xa0
 modulescript.pointer 0x120
 modulescript.module_state 0x138
 modulescript.module_state_basicscan 0x138
+modulescript.is_core_script 0x130
 
 [PLAYER]
 player.local_player 0x118
