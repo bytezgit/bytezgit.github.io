@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bytez Toolkit &mdash; Apps by Me</title>
+<meta name="description" content="Apps and tools made by bytez.">
+<meta name="theme-color" content="#d6d6d6">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="assets/oldgtk.css">
+<link rel="stylesheet" href="assets/pages.css">
+<style>
+.discord-bar{display:flex;align-items:center;gap:10px;padding:6px 10px;margin-top:8px;background:#d6d6d6;border:1px solid;border-color:#fff #7a7a7a #7a7a7a #fff}
+.discord-bar .discord-text{flex:1;min-width:0}
+.discord-bar .discord-text b{display:block}
+.discord-btn{flex:none;background:#6b75c9;color:#fff!important;text-decoration:none;padding:4px 12px;border:1px solid;border-color:#b4b9e6 #3b4380 #3b4380 #b4b9e6}
+.discord-btn:hover{background:#7983d6}
+.discord-btn:active{border-color:#3b4380 #b4b9e6 #b4b9e6 #3b4380}
+@media(max-width:600px){.discord-bar{flex-wrap:wrap}.discord-btn{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+
+<div class="window">
+
+  <div class="menubar" role="menubar">
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>F</u>ile</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="index.html" role="menuitem">Home</a>
+        <a class="menu-item" href="roblox-offsets.html" role="menuitem">Roblox Offsets</a>
+        <a class="menu-item" href="steam-drm-free.html" role="menuitem">Steam DRM-Free .so</a>
+        <a class="menu-item" href="appsbyme.html" role="menuitem"><span class="check">&#10003;</span>Apps by Me</a>
+        <div class="menu-sep"></div>
+        <a class="menu-item" href="https://github.com/bytezgit" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub repository</a>
+        <a class="menu-item" href="https://discord.com/users/1327976719541469268" target="_blank" rel="noopener noreferrer" role="menuitem">Discord profile</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>E</u>dit</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="find" role="menuitem">Find<span class="key">Ctrl+F</span></button>
+        <button class="menu-item" data-action="copy-link" role="menuitem">Copy page link</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>V</u>iew</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="refresh" role="menuitem">Refresh</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>T</u>ools</button>
+      <div class="dropdown" role="menu">
+        <a class="menu-item" href="dump.txt" role="menuitem">Open dump.txt</a>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-btn" aria-haspopup="true" aria-expanded="false"><u>H</u>elp</button>
+      <div class="dropdown" role="menu">
+        <button class="menu-item" data-action="about" role="menuitem">About Bytez Toolkit</button>
+        <button class="menu-item" data-action="shortcuts" role="menuitem">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="tb-btn nav-toggle" data-nav-toggle aria-label="Toggle navigation" aria-expanded="false" title="Navigation">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+    </button>
+    <button class="tb-btn" onclick="history.back()" title="Back" aria-label="Back">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
+    </button>
+    <button class="tb-btn tb-optional" onclick="history.forward()" title="Forward" aria-label="Forward">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+    </button>
+    <a class="tb-btn" href="index.html" title="Home" aria-label="Home">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7l6-5 6 5v7H2z"/><path d="M6 14V9h4v5"/></svg>
+    </a>
+    <span class="tb-sep"></span>
+    <button class="tb-btn" data-action="refresh" title="Refresh" aria-label="Refresh">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5V2m0 3H10"/><path d="M13 5a5.5 5.5 0 1 0 .4 5"/></svg>
+    </button>
+    <label class="searchbox">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+      <input type="text" data-search placeholder="Search apps" aria-label="Search apps" autocomplete="off" spellcheck="false">
+    </label>
+    <span class="toolbar-note">Ctrl+F</span>
+  </div>
+
+  <div class="workspace">
+
+    <aside class="tree-pane" aria-label="Explorer">
+      <div class="tree-row" style="--d:0">
+        <span class="tw blank"></span><span class="icon icon-app"></span><span>Bytez Toolkit</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-href="index.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Home</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="projects" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Projects</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Roblox Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="steam-drm-free.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Steam DRM-Free .so</span>
+      </div>
+      <div class="tree-row selected" style="--d:2" data-parent="projects" data-href="appsbyme.html" aria-current="page">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Apps by Me</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="projects" data-href="https://bytezdev.itch.io/linuxce">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>LinuxCE</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="reference" aria-expanded="true">
+        <span class="tw">&minus;</span><span class="icon icon-folder"></span><span>Reference</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="roblox-offsets.html">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>Offsets</span>
+      </div>
+      <div class="tree-row" style="--d:2" data-parent="reference" data-href="dump.txt">
+        <span class="tw blank"></span><span class="icon icon-doc"></span><span>dump.txt</span>
+      </div>
+      <div class="tree-row" style="--d:1" data-group="links" aria-expanded="false">
+        <span class="tw">+</span><span class="icon icon-folder"></span><span>Links</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://github.com/bytezgit">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>GitHub</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://discord.gg/NyMHdZSM5g">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Discord Server</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://discord.com/users/1327976719541469268">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Discord</span>
+      </div>
+      <div class="tree-row hidden" style="--d:2" data-parent="links" data-href="https://steamcommunity.com/id/realbytez">
+        <span class="tw blank"></span><span class="icon icon-link"></span><span>Steam</span>
+      </div>
+    </aside>
+
+    <div class="splitter" role="separator" aria-orientation="vertical" title="Drag to resize. Double-click to reset."></div>
+
+    <main class="content">
+
+      <fieldset class="group">
+        <legend>Apps by Me</legend>
+        <div class="page-summary">
+          <div class="page-summary-main">
+            <h1>Apps by Me</h1>
+            <p>Free apps coded by me. VirusTotal scans included.</p>
+            <div class="facts">
+              <span class="fact"><b id="statApps">1</b> app</span>
+              <span class="fact"><b>manual</b> updates</span>
+              <span class="fact"><b>direct</b> links</span>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Available apps</legend>
+        <div class="grid-tools">
+          <span id="appCount">1 app</span>
+          <span class="grid-hint">Download and scan links open in a new tab</span>
+        </div>
+        <div class="grid-scroll">
+          <table class="grid grid--apps">
+            <thead>
+              <tr>
+                <th class="c-num">#</th>
+                <th class="c-app">App</th>
+                <th class="c-desc">Description</th>
+                <th class="c-scan">Scan</th>
+                <th class="c-dl">Download</th>
+              </tr>
+            </thead>
+            <tbody id="appRows">
+              <!--
+                APP ENTRY
+                Copy this <tr> block and change:
+                  data-search  lowercase words used by the search box
+                  .c-num       row number
+                  .app-logo    optional <img src="assets/apps/your-app.png" alt="" onerror="this.remove()">
+                               inside .app-logo; the letter in .app-logo-text is the fallback
+                  .app-name    app name
+                  .c-desc      one-line description (keep title="" in sync for the tooltip)
+                  .c-scan a    this app's own VirusTotal link
+                  .c-dl a      download link
+              -->
+
+              <tr data-row data-search=".NET decompiler coded in rust">
+                <td class="c-num">02</td>
+                <td class="c-app">
+                  <span class="app-cell">
+                    <span class="app-logo">
+                      <img src="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/main/apps/Sloth.png"
+                          alt="Sloth logo"
+                          width="32" height="32"
+                          loading="lazy"
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                      <span class="app-logo-text" aria-hidden="true" style="display:none;">L</span>
+                    </span>
+                    <span class="app-name">Sloth</span>
+                  </span>
+                </td>
+                <td class="c-desc" title=".NET decompiler">.NET decompiler coded in rust</td>
+                <td class="c-scan">
+                  <a class="btn-mini"
+                    href="https://github.com/bytezgit/bytezgit.github.io/blob/main/apps/sloth.png?raw=true"
+                    target="_blank" rel="noopener noreferrer"
+                    title="VirusTotal scan for Sloth">VirusTotal</a>
+                </td>
+                <td class="c-dl">
+                  <a class="btn"
+                    href="https://raw.githubusercontent.com/bytezgit/bytezgit.github.io/refs/heads/main/apps/sloth.exe"
+                    target="_blank" rel="noopener noreferrer">Download</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-tools" id="emptyState" hidden>
+          <span>No apps match that search.</span>
+          <button class="btn-mini" id="clearSearch" type="button">Clear search</button>
+        </div>
+      </fieldset>
+
+      <div class="discord-bar">
+        <div class="discord-text"><b>Join the Discord server!</b>Updates, requests and help.</div>
+        <a class="discord-btn" href="https://discord.gg/NyMHdZSM5g" target="_blank" rel="noopener noreferrer">Join the Discord server!</a>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="statusbar">
+    <span class="status-cell" id="status">Ready</span>
+    <span class="status-sep"></span>
+    <span class="status-cell hide-sm" id="count">1 app</span>
+    <span class="status-spacer"></span>
+    <span class="status-sep hide-sm"></span>
+    <span class="status-cell hide-sm" data-clock>--:--:--</span>
+    <span class="grip" aria-hidden="true"></span>
+  </div>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <div class="dialog-title">
+      <span id="dialogTitle">About Bytez Toolkit</span>
+      <button class="dialog-x" data-dialog-close aria-label="Close">&#10005;</button>
+    </div>
+    <div class="dialog-body" id="dialogBody"></div>
+    <div class="dialog-actions"><button class="btn" data-dialog-close>OK</button></div>
+  </div>
+</div>
+
+<script src="assets/oldgtk.js"></script>
+<script>
+  (function () {
+    const rows = Array.from(document.querySelectorAll('#appRows tr[data-row]'));
+    const empty = document.getElementById('emptyState');
+    const appCount = document.getElementById('appCount');
+    const statApps = document.getElementById('statApps');
+    const search = document.querySelector('[data-search]');
+
+    const label = (n) => n + (n === 1 ? ' app' : ' apps');
+
+    statApps.textContent = String(rows.length);
+
+    WF.onFilter = (term) => {
+      let visible = 0;
+      rows.forEach((row) => {
+        const hit = !term || row.dataset.search.includes(term);
+        row.hidden = !hit;
+        if (hit) visible++;
+      });
+
+      empty.hidden = visible !== 0;
+      appCount.textContent = term ? visible + ' of ' + rows.length + ' apps' : label(rows.length);
+      WF.setCount(term ? visible + ' of ' + rows.length + ' apps' : label(rows.length));
+      WF.setStatus(term ? visible + ' match' + (visible === 1 ? '' : 'es') : 'Ready');
+    };
+
+    WF.onFilter('');
+
+    document.getElementById('clearSearch').addEventListener('click', () => {
+      search.value = '';
+      WF.onFilter('');
+      search.focus();
+    });
+  })();
+</script>
+</body>
+</html>
